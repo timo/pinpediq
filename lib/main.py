@@ -49,20 +49,21 @@ def rungame():
   lvl = level.load("krasi")
 
   plr = sprite.Sprite("player")
-  plr.x = 1
+  plr.x = 2
   plr.y = 1
-  plr.vy = -0.5
+  plr.w = 0.5
+  plr.h = 0.5
+
+  timer.gameSpeed = 1
 
   while running:
     timer.startFrame()
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         running = False
-
-
     if pygame.key.get_pressed()[K_UP]:
       if plr.physics == STANDING:
-        plr.vy = -5.0
+        plr.vy = -6.0
     elif plr.physics == FALLING and plr.vy < 0:
       plr.vy *= 1.0 - timer.curspd
 
@@ -84,7 +85,7 @@ def rungame():
     # do stuff
     lvl.draw()
     plr.draw()
-    glTranslatef(10, 0, 0)
+    glTranslatef(13, 0, 0)
     lvl.showCollision()
 
     pygame.display.flip()

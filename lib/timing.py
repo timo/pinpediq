@@ -43,6 +43,7 @@ sets an appropriate value for self.curspd"""
     self.frameTime = self.now() - self.frameStartTime
     # this should probably work...
     self.curspd = self.frameTime
+    self.curspd = self.speed()
 
   def speed(self):
     """returns the speed at which the game shall run.
