@@ -41,14 +41,16 @@ class Sprite:
     tily = int(y)
     endy = int(y + self.h)
     
-    glColor4f(1.0, 0.0, 0.0, 0.25)
+    #glColor4f(1.0, 0.0, 0.0, 0.25)
 
-    self.mark(x, y, 0, self.h)
-    if tily != y - self.h:
+    #self.mark(x, y, 0, self.h)
+    if tily != y - (1.0 - self.h):
       endy += 1
 
     for ty in range(tily, endy) or [tily]:
-      self.markTile(tilx, ty)
+      #self.markTile(tilx, ty)
+      if ty >= self.lev.size[1] or tilx >= self.lev.size[0]:
+        return True
       if self.lev.collision[self.lev.level[ty][tilx]] == 1:
         return True
 
@@ -58,14 +60,16 @@ class Sprite:
     tilx = int(x)
     tily = int(y)
     endx = int(x + self.w)
-    glColor4f(0.0, 1.0, 0.0, 0.25)
-    self.mark(x, y, self.w, 0)
+    #glColor4f(0.0, 1.0, 0.0, 0.25)
+    #self.mark(x, y, self.w, 0)
 
-    if tilx != x - self.w:
+    if tilx != x - (1.0 - self.w):
       endx += 1
 
     for tx in range(tilx, endx) or [tilx]:
-      self.markTile(tx, tily)
+      #self.markTile(tx, tily)
+      if tily >= self.lev.size[1] or tx >= self.lev.size[0]:
+        return True
       if self.lev.collision[self.lev.level[tily][tx]] == 1 or (self.lev.collision[self.lev.level[tily][tx]] in [4, 5] and self.vy > 0):
         return True
 
@@ -74,7 +78,7 @@ class Sprite:
   def checkCollision(self, vx, vy):
     if vx > 0:
       if self.checkVerLine(self.x + vx + self.w, self.y):
-        self.x = int(self.x + vx) + (1.0 - self.w)
+        self.x = int(self.x + vx) - self.w + 1
         self.vx = 0
       else:
         self.x += vx
@@ -87,7 +91,7 @@ class Sprite:
 
     if vy > 0:
       if self.checkHorLine(self.x, self.y + vy + self.h):
-        self.y = int(self.y + vy) + (1.0 - self.h)
+        self.y = int(self.y + vy) - self.h + 1
         self.vy = 0
         self.physics = STANDING
       else:
