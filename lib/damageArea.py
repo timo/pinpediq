@@ -1,6 +1,8 @@
 from timing import timer
 from OpenGL.GL import *
 from math import sin, cos, sqrt
+import enemy
+import random
 
 def frange(start, end, step):
   w = end - start
@@ -48,13 +50,18 @@ class RectDamage:
     glPopMatrix()
 
   def hit(self, other):
-    dvx = other.x + other.w / 2.0 - self.x
-    dvy = other.y + other.h / 2.0 - self.y
-    len = sqrt(dvx ** 2 + dvy ** 2)
-    dvx /= len
-    dvy /= len
-    other.vx += dvx
-    other.vy += dvy
+    if other.state != enemy.OUCH:
+      #dvx = other.x + other.w / 2.0 - self.x
+      #dvy = other.y + other.h / 2.0 - self.y
+      #len = sqrt(dvx ** 2 + dvy ** 2)
+      #dvx /= len
+      #dvy /= len
+      other.vx += random.random() * 4 - 2
+      other.vy += random.random() * -4
+
+      other.health -= 10
+      other.state = enemy.OUCH
+      other.nextstate = 1
 
 class ArcDamage(RectDamage):
   def __init__(self, x, y, vx, vy, ra, sa, ea, lifetime):
@@ -66,12 +73,13 @@ class ArcDamage(RectDamage):
     self.sa = sa
     self.ea = ea
     self.lifetime = lifetime
+    self.maxlifetime = lifetime
 
   def draw(self):
     glPushMatrix()
 
     glTranslatef(self.x, -self.y, 0)
-    glColor4f(1.0, 0.0, 1.0, 0.25)
+    glColor4f(1.0, 0.0, 1.0, 0.1)
     glDisable(GL_TEXTURE_2D)
 
     glBegin(GL_TRIANGLE_FAN)
@@ -82,6 +90,17 @@ class ArcDamage(RectDamage):
       py = sin(ang) * self.rad
       glVertex2f(px, py)
   
+    glEnd()
+
+    glColor4f(1.0, 0.0, 0.0, 0.75)
+
+    glBegin(GL_TRIANGLES)
+    glVertex2f(0, 0)
+    an = self.sa + (self.ea - self.sa) * self.lifetime / self.maxlifetime
+    for ang in [an - 0.2, an + 0.2]:
+      px = cos(ang) * self.rad
+      py = sin(ang) * self.rad
+      glVertex2f(px, py)
     glEnd()
 
     glPopMatrix()

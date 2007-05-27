@@ -10,6 +10,7 @@ from OpenGL.GL import *
 
 import level
 import sprite
+import enemy
 from time import sleep
 from physics import *
 
@@ -61,7 +62,7 @@ def rungame():
   enemies = []
 
   for i in range(5):
-    ne = sprite.Sprite("enemy")
+    ne = enemy.enemy("enemy")
     (ne.x, ne.y) = random.choice(possiblepositions)
     possiblepositions.remove((ne.x, ne.y))
     (ne.w, ne.h) = (0.6, 0.6)
@@ -87,7 +88,9 @@ def rungame():
           x  = plr.x
           sa = pi / 2
           ea = pi / 2 * 3
-        np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, 0, 0, 0.75, sa, ea, 0.5)
+        if plr.physics == STANDING:
+          plr.vy -= 2
+        np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25)
         pain.append(np)
 
     if pygame.key.get_pressed()[K_UP]:
@@ -119,6 +122,8 @@ def rungame():
       for p in pain:
         if p.check(en):
           p.hit(en)
+      if en.state == enemy.DEAD:
+        enemies.remove(en)
 
     # do stuff
     lvl.draw()
