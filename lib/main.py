@@ -5,9 +5,12 @@ from timing import timer
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
-from OpenGL.GLU import *
 
-from level import Level
+
+import level
+import sprite
+from time import sleep
+from physics import *
 
 # don't initialise sound stuff plzkthxbai
 pygame.mixer = None
@@ -23,11 +26,11 @@ sets the resolution and sets up the projection matrix"""
   glViewport(0, 0, width, height)
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
-  gluPerspective(45, 1.0*width/height, 1, 10)
+  glOrtho(0, width / 32, 0, height / 32, -10, 10)
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()
 
-if  __name__ == "__main__":
+def rungame():
   # initialize everything
   pygame.init()
   screen = pygame.display.set_mode(screensize, OPENGL|DOUBLEBUF)
@@ -43,7 +46,12 @@ if  __name__ == "__main__":
   running = True
   timer.startTiming()
 
-  lvl = Level("krasi")
+  lvl = level.load("krasi")
+
+  plr = sprite.Sprite("player")
+  plr.x = 1
+  plr.y = 1
+  plr.vy = -0.5
 
   while running:
     timer.startFrame()
@@ -51,13 +59,33 @@ if  __name__ == "__main__":
       if event.type == pygame.QUIT:
         running = False
 
+
+    if pygame.key.get_pressed()[K_UP]:
+      if plr.physics == STANDING:
+        plr.vy = -5.0
+    elif plr.physics == FALLING and plr.vy < 0:
+      plr.vy *= 1.0 - timer.curspd
+
+    if pygame.key.get_pressed()[K_LEFT]:
+      plr.vx = max(-3, plr.vx - 5 * timer.curspd)
+    elif pygame.key.get_pressed()[K_RIGHT]:
+      plr.vx = min(3, plr.vx + 5 * timer.curspd)
+    else:
+      if plr.vx != 0:
+        plr.vx *= 0.99
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
 
-    glTranslatef(-5,3,-10)
+    glTranslatef(0,10,0)
+
+    plr.move()
 
     # do stuff
     lvl.draw()
+    plr.draw()
+    glTranslatef(10, 0, 0)
+    lvl.showCollision()
 
     pygame.display.flip()
     timer.endFrame()

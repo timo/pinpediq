@@ -1,0 +1,25 @@
+ pqt: PinpediQuest Tilemap
+===========================
+
+- first line:
+   number of horitontal and vertical divisions in a tilemap:
+    _
+   [1]     ttc = 1
+    ___
+   [1|2]   ttc = 2
+   [3|4]
+    _____
+   [1|2|3] ttc = 3
+   [4|5|6]
+   [7|8|9]
+
+- following that:
+   for each tile in the tilemap there is one collision information line
+   this line contains the type of collision of that tile:
+
+   0: air, non-colliding
+   1: wall, fully colliding
+   2: slope /
+   3: slope \
+   4: platform, blocks only from above. player can fall through
+   5: platform, blocks only from above. player can't fall through

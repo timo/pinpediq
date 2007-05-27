@@ -1,0 +1,3 @@
+STANDING = 0
+FALLING  = 1
+LANDING  = 2
