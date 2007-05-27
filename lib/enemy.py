@@ -1,6 +1,7 @@
 from sprite import Sprite
 from timing import timer
 import random
+import res
 
 NORMAL    = 1
 OUCH      = 2
@@ -17,11 +18,23 @@ class enemy(Sprite):
     self.health = 100
     self.state = NORMAL
     self.nextstate = -1
+    self.ice = False
+
+  def draw(self, image = None):
+    Sprite.draw(self, image)
+    if self.state == FROZEN and not self.ice:
+      self.ice = True
+      self.draw(res.getTexture("iceblock"))
+      self.ice = False
 
   def move(self):
     if self.state == FROZEN:
-      self.vx = 0
-      self.vy = 0
+      if self.vy < -0.1:
+        self.vx *= 0.99
+        self.vy *= 0.999
+      else:
+        self.vy = -5 * timer.curspd
+        self.vx = 0
     elif self.state == TWISTING:
       self.vx = random.random()
     elif self.state == PARALYSED:
@@ -37,7 +50,8 @@ class enemy(Sprite):
             self.state = NORMAL
           self.nextstate = -1
         elif self.state == FROZEN:
-          self.health = 0
+          self.health = -1
           self.state = OUCH
-          print "ouch!"
           self.nextstate = 0.5
+          self.vy = random.random() * -4
+          self.vx = random.random() * 4 - 2

@@ -105,8 +105,11 @@ class Sprite:
         self.y += vy
         self.physics = FALLING
 
-  def draw(self):
-    self.img.bind()
+  def draw(self, image = None):
+    if image:
+      image.bind()
+    else:
+      self.img.bind()
     glColor4f(1.0, 1.0, 1.0, 1.0)
 
     glPushMatrix()

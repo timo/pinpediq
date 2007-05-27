@@ -59,6 +59,7 @@ class Level:
 
     self.tilemap.bind()
 
+    glEnable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
     for x in range(0, self.size[0]):
       for y in range(0, self.size[1]):

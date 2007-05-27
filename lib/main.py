@@ -42,7 +42,7 @@ def rungame():
 
   # some OpenGL magic!
   glEnable(GL_BLEND)
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
   glEnable(GL_LINE_SMOOTH)
   glEnable(GL_TEXTURE_2D)
 
@@ -70,6 +70,8 @@ def rungame():
     enemies.append(ne)
 
   timer.gameSpeed = 1
+
+  lasthithp = 0
 
   pain = []
 
@@ -122,6 +124,7 @@ def rungame():
       for p in pain:
         if p.check(en):
           p.hit(en)
+          lasthithp = en.health
       if en.state == enemy.DEAD:
         enemies.remove(en)
 
@@ -132,6 +135,21 @@ def rungame():
       en.draw()
     for p in pain:
       p.draw()
+
+    glDisable(GL_TEXTURE_2D)
+    glColor4f(1.0, 1.0, 1.0, 1.0)
+    glBegin(GL_QUADS)
+    glVertex2f(0, 0)
+    glVertex2f(2, 0)
+    glVertex2f(2, 0.2)
+    glVertex2f(0, 0.2)
+
+    glColor4f(1.0, 0.0, 0.0, 1.0)
+    glVertex2f(0.05, 0.05)
+    glVertex2f(0.05 + lasthithp / 100.0 * 1.9, 0.05)
+    glVertex2f(0.05 + lasthithp / 100.0 * 1.9, 0.15)
+    glVertex2f(0, 0.15)
+    glEnd()
     glTranslatef(13, 0, 0)
     lvl.showCollision()
 
