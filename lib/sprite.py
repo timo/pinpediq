@@ -105,12 +105,12 @@ class Sprite:
         self.y += vy
         self.physics = FALLING
 
-  def draw(self, image = None):
+  def draw(self, image = None, alpha = 1.0):
     if image:
       image.bind()
     else:
       self.img.bind()
-    glColor4f(1.0, 1.0, 1.0, 1.0)
+    glColor4f(1.0, 1.0, 1.0, alpha)
 
     glPushMatrix()
     glTranslatef(self.x, -self.y + 1, 0)
@@ -118,16 +118,16 @@ class Sprite:
 
     glBegin(GL_QUADS)
     
-    glTexCoord2f(0, 0)
+    glTexCoord2f(0, 1)
     glVertex2i(0, 1)
 
-    glTexCoord2f(0, 1)
+    glTexCoord2f(0, 0)
     glVertex2i(0, 0)
 
-    glTexCoord2f(1, 1)
+    glTexCoord2f(1, 0)
     glVertex2i(1, 0)
 
-    glTexCoord2f(1, 0)
+    glTexCoord2f(1, 1)
     glVertex2i(1, 1)
 
     glEnd()

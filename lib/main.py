@@ -54,17 +54,18 @@ def rungame():
 
   plr = sprite.Sprite("player")
   plr.x = 2
-  plr.y = 1
+  plr.y = -4
   plr.w = 0.75
   plr.h = 0.75
 
-  possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1)]
+  possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1),
+                       (1, 8)]
   enemies = []
 
   for i in range(5):
     ne = enemy.enemy("enemy")
     (ne.x, ne.y) = random.choice(possiblepositions)
-    possiblepositions.remove((ne.x, ne.y))
+    #possiblepositions.remove((ne.x, ne.y))
     (ne.w, ne.h) = (0.6, 0.6)
     ne.vx = 0.1
     enemies.append(ne)
@@ -75,39 +76,58 @@ def rungame():
 
   pain = []
 
+  sentence = ""
+  mode = 0
+
   while running:
     timer.startFrame()
     for event in pygame.event.get():
       if event.type == QUIT:
         running = False
 
-      if event.type == KEYDOWN and event.key == K_SPACE:
-        if plr.vx > 0:
-          x  = plr.x + plr.w
-          sa = pi / -2
-          ea = pi / 2
-        else:
-          x  = plr.x
-          sa = pi / 2
-          ea = pi / 2 * 3
+      if mode == 1:
+        if event.type == KEYDOWN:
+          if K_a < event.key < K_z:
+            sentence += chr(ord('a') + event.key - K_a)
+            print sentence
+          elif event.key == K_SPACE:
+            sentence += " "
+            print sentence
+          elif event.key == K_RETURN:
+            mode = 0
+      else:
+        if event.type == KEYDOWN:
+          if event.key == K_s:
+            mode = 1
+            sentence = ""
+          if event.key == K_SPACE:
+            if plr.vx > 0:
+              x  = plr.x + plr.w
+              sa = pi / -2
+              ea = pi / 2
+            else:
+              x  = plr.x
+              sa = pi / 2
+              ea = pi / 2 * 3
+            if plr.physics == STANDING:
+              plr.vy -= 2
+            np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25)
+            pain.append(np)
+
+    if mode == 0:
+      if pygame.key.get_pressed()[K_UP]:
         if plr.physics == STANDING:
-          plr.vy -= 2
-        np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25)
-        pain.append(np)
+          plr.vy = -6.0
+      elif plr.physics == FALLING and plr.vy < 0:
+        plr.vy *= 1.0 - timer.curspd
 
-    if pygame.key.get_pressed()[K_UP]:
-      if plr.physics == STANDING:
-        plr.vy = -6.0
-    elif plr.physics == FALLING and plr.vy < 0:
-      plr.vy *= 1.0 - timer.curspd
-
-    if pygame.key.get_pressed()[K_LEFT]:
-      plr.vx = max(-3, plr.vx - 5 * timer.curspd)
-    elif pygame.key.get_pressed()[K_RIGHT]:
-      plr.vx = min(3, plr.vx + 5 * timer.curspd)
-    else:
-      if plr.vx != 0:
-        plr.vx *= 0.99
+      if pygame.key.get_pressed()[K_LEFT]:
+        plr.vx = max(-3, plr.vx - 5 * timer.curspd)
+      elif pygame.key.get_pressed()[K_RIGHT]:
+        plr.vx = min(3, plr.vx + 5 * timer.curspd)
+      else:
+        if plr.vx != 0:
+          plr.vx *= 0.99
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()

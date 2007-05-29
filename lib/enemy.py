@@ -21,7 +21,10 @@ class enemy(Sprite):
     self.ice = False
 
   def draw(self, image = None):
-    Sprite.draw(self, image)
+    if self.state == OUCH and timer.blink(0.1):
+      Sprite.draw(self, image, 0.5)
+    else:
+      Sprite.draw(self, image)
     if self.state == FROZEN and not self.ice:
       self.ice = True
       self.draw(res.getTexture("iceblock"))
@@ -52,6 +55,6 @@ class enemy(Sprite):
         elif self.state == FROZEN:
           self.health = -1
           self.state = OUCH
-          self.nextstate = 0.5
+          self.nextstate = 0.25
           self.vy = random.random() * -4
           self.vx = random.random() * 4 - 2

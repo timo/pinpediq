@@ -45,6 +45,11 @@ sets an appropriate value for self.curspd"""
     self.curspd = self.frameTime
     self.curspd = self.speed()
 
+  def blink(self, duration):
+    if self.now() % (duration * 2) < duration:
+      return True
+    return False
+
   def speed(self):
     """returns the speed at which the game shall run.
 currently it is curspd * gameSpeed"""
