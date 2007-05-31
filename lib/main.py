@@ -11,6 +11,7 @@ from OpenGL.GL import *
 import level
 import sprite
 import enemy
+import font
 from time import sleep
 from physics import *
 
@@ -77,7 +78,10 @@ def rungame():
   pain = []
 
   sentence = ""
+  sentencestrength = 1
   mode = 0
+
+  textthing = font.Text("")
 
   while running:
     timer.startFrame()
@@ -87,19 +91,32 @@ def rungame():
 
       if mode == 1:
         if event.type == KEYDOWN:
-          if K_a < event.key < K_z:
+          if K_a <= event.key <= K_z:
             sentence += chr(ord('a') + event.key - K_a)
-            print sentence
+            textthing.renderText(sentence + "_")
+            textthing.rgba = (1, 1, 1, 1)
           elif event.key == K_SPACE:
             sentence += " "
-            print sentence
+            textthing.renderText(sentence + "_")
+            textthing.rgba = (1, 1, 1, 1)
+          elif event.key == K_BACKSPACE:
+            sentence = sentence[:-1]
+            textthing.renderText(sentence + "_")
+            textthing.rgba = (1, 1, 1, 1)
+            if len(sentence) == 0:
+              mode = 0
+              textthing.renderText(sentence)
           elif event.key == K_RETURN:
             mode = 0
+            sentencestrength = 1
+            textthing.renderText(sentence)
       else:
         if event.type == KEYDOWN:
           if event.key == K_s:
             mode = 1
             sentence = ""
+            textthing.renderText(sentence + "_")
+            textthing.rgba = (1, 1, 1, 1)
           if event.key == K_SPACE:
             if plr.vx > 0:
               x  = plr.x + plr.w
@@ -113,6 +130,8 @@ def rungame():
               plr.vy -= 2
             np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25)
             pain.append(np)
+            sentencestrength *= 0.75
+            textthing.rgba = (1, 1, 1, sentencestrength)
 
     if mode == 0:
       if pygame.key.get_pressed()[K_UP]:
@@ -127,10 +146,11 @@ def rungame():
         plr.vx = min(3, plr.vx + 5 * timer.curspd)
       else:
         if plr.vx != 0:
-          plr.vx *= 0.99
+          plr.vx *= 0.9
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
+
 
     glTranslatef(0,10,0)
 
@@ -155,6 +175,16 @@ def rungame():
       en.draw()
     for p in pain:
       p.draw()
+
+    glPushMatrix()
+
+    glLoadIdentity()
+
+    glTranslatef(5, 5, 0)
+    glScalef(1./32, 1./32, 1)
+    textthing.draw()
+
+    glPopMatrix()
 
     glDisable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
