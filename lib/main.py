@@ -128,7 +128,7 @@ def rungame():
               ea = pi / 2 * 3
             if plr.physics == STANDING:
               plr.vy -= 2
-            np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25)
+            np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25, 10 + len(sentence) * sentencestrength * 3)
             pain.append(np)
             sentencestrength *= 0.75
             textthing.rgba = (1, 1, 1, sentencestrength)

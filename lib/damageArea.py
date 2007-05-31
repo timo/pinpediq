@@ -10,12 +10,13 @@ def frange(start, end, step):
     yield start + i * step
 
 class RectDamage:
-  def __init__(self, x, y, vx, vy, lifetime):
+  def __init__(self, x, y, vx, vy, lifetime, damage = 10):
     self.x = x
     self.y = y
     self.vx = vx
     self.vy = vy
     self.lifetime = lifetime
+    self.damage = damage
 
   def move(self):
     self.x += self.vx * timer.curspd
@@ -59,7 +60,7 @@ class RectDamage:
       other.vx += random.random() * 4 - 2
       other.vy += random.random() * -4
 
-      other.health -= 10
+      other.health -= self.damage
       if random.random() < 0.1:
         other.state = enemy.FROZEN
         other.nextstate = 5
@@ -69,7 +70,7 @@ class RectDamage:
         other.nextstate = 1
 
 class ArcDamage(RectDamage):
-  def __init__(self, x, y, vx, vy, ra, sa, ea, lifetime):
+  def __init__(self, x, y, vx, vy, ra, sa, ea, lifetime, damage = 10):
     self.x = x
     self.y = y
     self.vx = vx
@@ -79,6 +80,7 @@ class ArcDamage(RectDamage):
     self.ea = ea
     self.lifetime = lifetime
     self.maxlifetime = lifetime
+    self.damage = damage
 
   def draw(self):
     glPushMatrix()
