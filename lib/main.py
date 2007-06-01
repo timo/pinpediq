@@ -156,9 +156,19 @@ def rungame():
         plr.vy *= 1.0 - timer.curspd
 
       if pygame.key.get_pressed()[K_LEFT]:
-        plr.vx = max(-3, plr.vx - 10 * timer.curspd)
+        if plr.state != 'ouch':
+          if plr.physics == 'standing':
+            plr.vx = max(-3, plr.vx - 10 * timer.curspd)
+          else:
+            plr.vx = max(-3, plr.vx - 5 * timer.curspd)
+
       elif pygame.key.get_pressed()[K_RIGHT]:
-        plr.vx = min(3, plr.vx + 10 * timer.curspd)
+        if plr.state != 'ouch':
+          if plr.physics == 'standing':
+            plr.vx = min(3, plr.vx + 10 * timer.curspd)
+          else:
+            plr.vx = min(3, plr.vx + 5 * timer.curspd)
+
       else:
         if plr.vx != 0:
           plr.vx *= 0.9
