@@ -40,15 +40,15 @@ class RectDamage:
 
     glDisable(GL_TEXTURE_2D)
 
-    glTranslatef(self.x, -self.y + 1, 0)
+    glTranslatef(self.x, self.y, 0)
     glColor4f(1.0, 0.0, 1.0, 0.25)
 
     glBegin(GL_QUADS)
 
-    glVertex2f(0, -self.w)
+    glVertex2f(0, self.w)
     glVertex2f(0, 0)
     glVertex2f(self.h, 0)
-    glVertex2f(self.h, -self.w)
+    glVertex2f(self.h, self.w)
 
     glEnd()
 
@@ -89,7 +89,7 @@ class ArcDamage(RectDamage):
   def draw(self):
     glPushMatrix()
 
-    glTranslatef(self.x, -self.y + 1, 0)
+    glTranslatef(self.x, self.y, 0)
     glColor4f(1.0, 0.0, 1.0, 0.1)
     glDisable(GL_TEXTURE_2D)
 

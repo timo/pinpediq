@@ -42,18 +42,18 @@ class Sprite:
   def mark(self, x, y, w, h):
     glDisable(GL_TEXTURE_2D)
     glBegin(GL_LINES)
-    glVertex2f(0 + x, -y + 1)
-    glVertex2f(0 + x + w, -y - h + 1)
+    glVertex2f(0 + x, y)
+    glVertex2f(0 + x + w, y + h)
     glEnd()
     glEnable(GL_TEXTURE_2D)
 
   def markTile(self, x, y):
     glDisable(GL_TEXTURE_2D)
     glBegin(GL_QUADS)
-    glVertex2f(0 + x, -y + 1)
-    glVertex2d(0 + x + 1, -y + 1)
-    glVertex2f(0 + x + 1, -y)
-    glVertex2f(0 + x, -y)
+    glVertex2f(x, y + 1)
+    glVertex2d(x + 1, y + 1)
+    glVertex2f(x + 1, y)
+    glVertex2f(x, y)
     glEnd()
     glEnable(GL_TEXTURE_2D)
 
@@ -134,8 +134,8 @@ class Sprite:
     glColor4f(1.0, 1.0, 1.0, alpha)
 
     glPushMatrix()
-    glTranslatef(self.x, -self.y + 1, 0)
-    glScalef(self.w, -self.h, 1)
+    glTranslatef(self.x, self.y, 0)
+    glScalef(self.w, self.h, 1)
 
     glBegin(GL_QUADS)
     

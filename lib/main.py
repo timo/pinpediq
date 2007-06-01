@@ -31,7 +31,7 @@ sets the resolution and sets up the projection matrix"""
   glViewport(0, 0, width, height)
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
-  glOrtho(0, width / 32, 0, height / 32, -10, 10)
+  glOrtho(0, width / 32, height / 32, 0, -10, 10)
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()
 
@@ -135,7 +135,7 @@ def rungame():
               ea = pi / 2 * 3
             if plr.physics == STANDING:
               plr.vy -= 2
-            np = damageArea.ArcDamage(x, plr.y - plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25, 10 + len(sentence) * sentencestrength * 3)
+            np = damageArea.ArcDamage(x, plr.y + plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25, 10 + len(sentence) * sentencestrength * 3)
             pain.append(np)
             sentencestrength *= 0.75
             textthing.rgba = (1, 1, 1, sentencestrength)
@@ -157,9 +157,6 @@ def rungame():
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-
-
-    glTranslatef(0,lvl.size[1],0)
 
     plr.move()
     for p in ppain:
@@ -218,16 +215,16 @@ def rungame():
     # player HP
     glColor4f(1.0, 1.0, 1.0, 1.0)
     glBegin(GL_QUADS)
-    glVertex2f(2, 0)
-    glVertex2f(4, 0)
-    glVertex2f(4, 0.2)
-    glVertex2f(2, 0.2)
+    glVertex2f(3, 0)
+    glVertex2f(5, 0)
+    glVertex2f(5, 0.2)
+    glVertex2f(3, 0.2)
 
     glColor4f(1.0, 0.0, 0.0, 1.0)
-    glVertex2f(2.05, 0.05)
-    glVertex2f(2.05 + plr.health / 100.0 * 1.9, 0.05)
-    glVertex2f(2.05 + plr.health / 100.0 * 1.9, 0.15)
-    glVertex2f(2, 0.15)
+    glVertex2f(3.05, 0.05)
+    glVertex2f(3.05 + plr.health / 100.0 * 1.9, 0.05)
+    glVertex2f(3.05 + plr.health / 100.0 * 1.9, 0.15)
+    glVertex2f(3, 0.15)
     glEnd()
 
     pygame.display.flip()

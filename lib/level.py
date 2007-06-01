@@ -44,16 +44,16 @@ class Level:
       glBegin(GL_QUADS)
       
       glTexCoord2f(x + zx, y + zy)
-      glVertex2i(0, 1)
-
-      glTexCoord2f(x + zx, y + h - zy)
       glVertex2i(0, 0)
 
+      glTexCoord2f(x + zx, y + h - zy)
+      glVertex2i(0, 1)
+
       glTexCoord2f(x + w - zx , y + h - zx)
-      glVertex2i(1, 0)
+      glVertex2i(1, 1)
 
       glTexCoord2f(x + w - zy, y + zy)
-      glVertex2i(1, 1)
+      glVertex2i(1, 0)
 
       glEnd()
 
@@ -64,7 +64,7 @@ class Level:
     for x in range(0, self.size[0]):
       for y in range(0, self.size[1]):
         glPushMatrix()
-        glTranslatef(x, -y, 0)
+        glTranslatef(x, y, 0)
         quad(self, self.level[y][x] % self.ttc,self.level[y][x] / self.ttc, self.ttc, self.ttc)
         glPopMatrix()
 
@@ -74,7 +74,7 @@ class Level:
     for x in range(0, self.size[0]):
       for y in range(0, self.size[1]):
         glPushMatrix()
-        glTranslatef(x, -y, 0)
+        glTranslatef(x, y, 0)
         v = self.collision[self.level[y][x]]
         if v == 1:
           glBegin(GL_QUADS)

@@ -57,16 +57,16 @@ class Text:
     glColor4fv(self.rgba)
     glBegin(GL_QUADS)
 
-    glTexCoord2f(0, texh)
+    glTexCoord2f(0, 0)
     glVertex2f(0, 0)
 
-    glTexCoord2f(0, 0)
+    glTexCoord2f(0, texh)
     glVertex2f(0, self.h)
 
-    glTexCoord2f(texw, 0)
+    glTexCoord2f(texw, texh)
     glVertex2f(self.w, self.h)
 
-    glTexCoord2f(texw, texh)
+    glTexCoord2f(texw, 0)
     glVertex2f(self.w, 0)
 
     glEnd()
