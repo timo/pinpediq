@@ -1,7 +1,6 @@
 import res
 from OpenGL.GL import *
 import level
-from physics import *
 from timing import timer
 
 class Sprite:

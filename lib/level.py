@@ -1,7 +1,6 @@
 import res
 from OpenGL.GL import *
 import random
-from physics import *
 # Collisions:
 # 0:  none
 # 1:  full
