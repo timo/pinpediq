@@ -4,26 +4,18 @@ import level
 from physics import *
 from timing import timer
 
-NORMAL    = 1
-OUCH      = 2
-FROZEN    = 3
-TWISTING  = 4
-DROWNING  = 5
-BURNING   = 6
-PARALYSED = 7
-DEAD      = 8
-
 class Sprite:
   def __init__(self, imagename):
     self.img = res.getTexture(imagename)
-    self.physics = FALLING
     (self.x,  self.y)  = (0, 0)
     (self.vx, self.vy) = (0, 0)
     (self.h, self.w) = (1.0, 1.0)
 
+    self.physics = 'standing'
+
     self.lev = level.getCurrent()
 
-    self.state = NORMAL
+    self.state = 'normal'
     self.nextstate = -1
     
   def setstate(self, state, duration = -1):
@@ -37,7 +29,7 @@ class Sprite:
     if self.nextstate != -1:
       self.nextstate -= timer.curspd
       if self.nextstate < 0:
-        self.setstate(NORMAL)
+        self.setstate('normal')
 
   def mark(self, x, y, w, h):
     glDisable(GL_TEXTURE_2D)
@@ -114,17 +106,18 @@ class Sprite:
       if self.checkHorLine(self.x, self.y + vy + self.h):
         self.y = int(self.y + vy) - self.h + 1
         self.vy = 0
-        self.physics = STANDING
+        self.physics = 'standing'
       else:
         self.y += vy
-        self.physics = FALLING
+        self.physics = 'falling'
     elif vy < 0:
       if self.checkHorLine(self.x, self.y + vy):
         self.y = int(self.y + vy) + 1
         self.vy = self.vy * -0.25
+        self.physics = 'falling'
       else:
         self.y += vy
-        self.physics = FALLING
+        self.physics = 'falling'
 
   def draw(self, image = None, alpha = 1.0):
     if image:

@@ -13,7 +13,6 @@ import sprite
 import enemy
 import font
 from time import sleep
-from physics import *
 
 import damageArea
 
@@ -62,6 +61,15 @@ def rungame():
 
   possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1),
                        (1, 8)]
+
+  #possiblepositions = []
+  #for y in range(lvl.size[1]):
+  #  for x in range(lvl.size[0]):
+  #    if lvl.collision[lvl.level[y][x]] == 0:
+  #      possiblepositions.append((x, y))
+  #      print lvl.level[y][x], (x, y)
+  # TODO: find out why the mabla this doesn't work!
+  
   enemies = []
   pain = []
   ppain = []
@@ -133,7 +141,7 @@ def rungame():
               x  = plr.x
               sa = pi / 2
               ea = pi / 2 * 3
-            if plr.physics == STANDING:
+            if plr.physics == 'standing':
               plr.vy -= 2
             np = damageArea.ArcDamage(x, plr.y + plr.h / 2.0, plr.vx, plr.vy, 0.75, sa, ea, 0.25, 10 + len(sentence) * sentencestrength * 3)
             pain.append(np)
@@ -142,15 +150,15 @@ def rungame():
 
     if mode == 0:
       if pygame.key.get_pressed()[K_UP]:
-        if plr.physics == STANDING:
+        if plr.physics == 'standing':
           plr.vy = -6.0
-      elif plr.physics == FALLING and plr.vy < 0:
+      elif plr.physics == 'falling' and plr.vy < 0:
         plr.vy *= 1.0 - timer.curspd
 
       if pygame.key.get_pressed()[K_LEFT]:
-        plr.vx = max(-3, plr.vx - 5 * timer.curspd)
+        plr.vx = max(-3, plr.vx - 10 * timer.curspd)
       elif pygame.key.get_pressed()[K_RIGHT]:
-        plr.vx = min(3, plr.vx + 5 * timer.curspd)
+        plr.vx = min(3, plr.vx + 10 * timer.curspd)
       else:
         if plr.vx != 0:
           plr.vx *= 0.9
@@ -175,7 +183,7 @@ def rungame():
         if p.check(en):
           p.hit(en)
           lasthithp = en.health
-      if en.state == enemy.DEAD:
+      if en.state == 'dead':
         enemies.remove(en)
 
     # do stuff

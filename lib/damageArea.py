@@ -55,7 +55,7 @@ class RectDamage:
     glPopMatrix()
 
   def hit(self, other):
-    if other.state == NORMAL and self.damage > 0:
+    if other.state == 'normal' and self.damage > 0:
       dvx = other.x + other.w / 2. - (self.x + self.w / 2.)
       dvy = other.y + other.h / 2. - (self.y + self.h / 2.)
       len = sqrt(dvx ** 2 + dvy ** 2)
@@ -66,10 +66,10 @@ class RectDamage:
 
       other.health -= self.damage
       if random.random() < 0.1:
-        other.setstate(FROZEN, 5)
+        other.setstate('frozen', 5)
         other.vy -= 2
       else:
-        other.setstate(OUCH, 1)
+        other.setstate('ouch', 1)
 
 class ArcDamage(RectDamage):
   def __init__(self, x, y, vx, vy, ra, sa, ea, lifetime, damage = 10):
