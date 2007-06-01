@@ -58,24 +58,28 @@ def rungame():
   plr.y = -4
   plr.w = 0.75
   plr.h = 0.75
+  plr.health = 100
 
   possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1),
                        (1, 8)]
   enemies = []
+  pain = []
+  ppain = []
 
   for i in range(5):
     ne = enemy.enemy("enemy")
     (ne.x, ne.y) = random.choice(possiblepositions)
     #possiblepositions.remove((ne.x, ne.y))
     (ne.w, ne.h) = (0.6, 0.6)
-    ne.vx = 0.1
+    ne.vx = 0.5
     enemies.append(ne)
+    ppain.append(damageArea.RectDamage(ne.x, ne.y, ne.w, ne.h, ne.vx, ne.vy, -1, 10))
+    ne.damager = ppain[-1] 
 
   timer.gameSpeed = 1
 
   lasthithp = 0
 
-  pain = []
 
   sentence = ""
   sentencestrength = 1
@@ -92,7 +96,10 @@ def rungame():
       if mode == 1:
         if event.type == KEYDOWN:
           if K_a <= event.key <= K_z:
-            sentence += chr(ord('a') + event.key - K_a)
+            if event.key == K_h:
+              sentence += "'"
+            else:
+              sentence += chr(ord('a') + event.key - K_a)
             textthing.renderText(sentence + "_")
             textthing.rgba = (1, 1, 1, 1)
           elif event.key == K_SPACE:
@@ -152,9 +159,15 @@ def rungame():
     glLoadIdentity()
 
 
-    glTranslatef(0,10,0)
+    glTranslatef(0,lvl.size[1],0)
 
     plr.move()
+    for p in ppain:
+      p.move()
+      if p.lifetime == 0:
+        ppain.remove(p)
+      if p.check(plr):
+        p.hit(plr)
     for p in pain:
       p.move()
       if p.lifetime == 0:
@@ -186,6 +199,7 @@ def rungame():
 
     glPopMatrix()
 
+    # enemy HP
     glDisable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
     glBegin(GL_QUADS)
@@ -200,8 +214,21 @@ def rungame():
     glVertex2f(0.05 + lasthithp / 100.0 * 1.9, 0.15)
     glVertex2f(0, 0.15)
     glEnd()
-    glTranslatef(13, 0, 0)
-    lvl.showCollision()
+    
+    # player HP
+    glColor4f(1.0, 1.0, 1.0, 1.0)
+    glBegin(GL_QUADS)
+    glVertex2f(2, 0)
+    glVertex2f(4, 0)
+    glVertex2f(4, 0.2)
+    glVertex2f(2, 0.2)
+
+    glColor4f(1.0, 0.0, 0.0, 1.0)
+    glVertex2f(2.05, 0.05)
+    glVertex2f(2.05 + plr.health / 100.0 * 1.9, 0.05)
+    glVertex2f(2.05 + plr.health / 100.0 * 1.9, 0.15)
+    glVertex2f(2, 0.15)
+    glEnd()
 
     pygame.display.flip()
     timer.endFrame()

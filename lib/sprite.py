@@ -4,6 +4,15 @@ import level
 from physics import *
 from timing import timer
 
+NORMAL    = 1
+OUCH      = 2
+FROZEN    = 3
+TWISTING  = 4
+DROWNING  = 5
+BURNING   = 6
+PARALYSED = 7
+DEAD      = 8
+
 class Sprite:
   def __init__(self, imagename):
     self.img = res.getTexture(imagename)
@@ -13,10 +22,22 @@ class Sprite:
     (self.h, self.w) = (1.0, 1.0)
 
     self.lev = level.getCurrent()
+
+    self.state = NORMAL
+    self.nextstate = -1
     
+  def setstate(self, state, duration = -1):
+    self.state = state
+    self.nextstate = duration
+
   def move(self):
     self.vy += 5 * timer.curspd
     self.checkCollision(self.vx * timer.curspd, self.vy * timer.curspd)
+
+    if self.nextstate != -1:
+      self.nextstate -= timer.curspd
+      if self.nextstate < 0:
+        self.setstate(NORMAL)
 
   def mark(self, x, y, w, h):
     glDisable(GL_TEXTURE_2D)

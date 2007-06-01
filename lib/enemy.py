@@ -1,16 +1,7 @@
-from sprite import Sprite
+from sprite import *
 from timing import timer
 import random
 import res
-
-NORMAL    = 1
-OUCH      = 2
-FROZEN    = 3
-TWISTING  = 4
-DROWNING  = 5
-BURNING   = 6
-PARALYSED = 7
-DEAD      = 8
 
 class enemy(Sprite):
   def __init__(self, enemyname):
@@ -19,6 +10,7 @@ class enemy(Sprite):
     self.state = NORMAL
     self.nextstate = -1
     self.ice = False
+    self.damager = None
 
   def draw(self, image = None):
     if self.state == OUCH and timer.blink(0.1):
@@ -29,6 +21,17 @@ class enemy(Sprite):
       self.ice = True
       self.draw(res.getTexture("iceblock"))
       self.ice = False
+
+  def setstate(self, state, duration = -1):
+    self.state = state
+    self.nextstate = duration
+    if state in [NORMAL, PARALYSED, BURNING, PARALYSED] and self.health > 0:
+      self.damager.damage = 1
+    else:
+      self.damager.damage = 0
+      if self.health <= 0 and state not in [DEAD, OUCH]:
+        self.damager.lifetime = 0
+        self.setstate(DEAD)
 
   def move(self):
     if self.state == FROZEN:
@@ -43,18 +46,19 @@ class enemy(Sprite):
     elif self.state == PARALYSED:
       self.vx *= 0.9
     Sprite.move(self)
+    (self.damager.x, self.damager.y) = (self.x, self.y)
+    (self.damager.vx, self.damager.vy) = (self.vx, self.vy)
     if self.nextstate != -1:
       self.nextstate -= timer.curspd
       if self.nextstate < 0:
         if self.state in [NORMAL, OUCH, TWISTING, DROWNING, BURNING, PARALYSED]:
           if self.health < 0:
-            self.state = DEAD
+            self.setstate(DEAD)
           else:
-            self.state = NORMAL
+            self.setstate(NORMAL)
           self.nextstate = -1
         elif self.state == FROZEN:
           self.health = -1
-          self.state = OUCH
-          self.nextstate = 0.25
+          self.setstate(OUCH, 0.25)
           self.vy = random.random() * -4
           self.vx = random.random() * 4 - 2
