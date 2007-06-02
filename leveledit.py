@@ -38,6 +38,31 @@ running = True
 timing.timer.startTiming()
 
 while running:
+  for ev in pygame.event.get():
+    if ev.type == QUIT:
+      running = False
+
+    if ev.type == KEYDOWN:
+      if ev.key == K_UP:
+        lvlcur.y -= 1
+      elif ev.key == K_DOWN:
+        lvlcur.y += 1
+      elif ev.key == K_LEFT:
+        lvlcur.x -= 1
+      elif ev.key == K_RIGHT:
+        lvlcur.x += 1
+
+      elif ev.key == K_a:
+        try:
+          lvl.level[lvlcur.y][lvlcur.x] += 1
+        except:
+          pass
+      elif ev.key == K_s:
+        try:
+          lvl.level[lvlcur.y][lvlcur.x] -= 1
+        except:
+          pass
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
   glLoadIdentity()
   
