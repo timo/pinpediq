@@ -66,11 +66,16 @@ while running:
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
   glLoadIdentity()
   
+  glPushMatrix()
+  glTranslatef(1, 1, 0)
+
   lvl.draw()
   lvl.showBorder()
   lvl.showGrid()
 
   lvlcur.draw()
+
+  glPopMatrix()
 
   glPushMatrix()
   glScalef(32 ** -1, 32 ** -1, 1)

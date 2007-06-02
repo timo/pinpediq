@@ -67,8 +67,8 @@ def rungame():
                        (1, 8)]
 
   #possiblepositions = []
-  #for y in range(lvl.size[1]):
-  #  for x in range(lvl.size[0]):
+  #for y in range(lvl.h):
+  #  for x in range(lvl.w):
   #    if lvl.collision[lvl.level[y][x]] == 0:
   #      possiblepositions.append((x, y))
   #      print lvl.level[y][x], (x, y)

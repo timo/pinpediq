@@ -12,7 +12,7 @@ class Level:
     if levelname:
       self.load(levelname)
     else:
-      self.size = [4, 4]
+      (self.w, self.h) = (4, 4)
       self.level = [[0, 1, 2, 3],
                     [3, 2, 1, 0],
                     [0, 1, 2, 3],
@@ -27,10 +27,10 @@ class Level:
     lf = open("data/levels/%s.pql" % levelname, "r")
     
     tilemapname = lf.readline().strip()
-    self.size = [int(a) for a in lf.readline().strip().split(",")]
+    (self.w, self.h) = [int(a) for a in lf.readline().strip().split(",")]
 
     self.level = []
-    for row in range(self.size[1]):
+    for row in range(self.h):
       self.level.append([int(a) for a in lf.readline().strip().split()])
 
     self.tilemap = res.getTexture(tilemapname)
@@ -74,8 +74,8 @@ class Level:
 
     glEnable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
-    for x in range(0, self.size[0]):
-      for y in range(0, self.size[1]):
+    for x in range(0, self.w):
+      for y in range(0, self.h):
         glPushMatrix()
         glTranslatef(x, y, 0)
         quad(self, self.level[y][x] % self.ttc,self.level[y][x] / self.ttc, self.ttc, self.ttc)
@@ -87,9 +87,9 @@ class Level:
 
     glBegin(GL_LINE_LOOP)
     glVertex2f(0, 0)
-    glVertex2f(0, self.size[1])
-    glVertex2f(*self.size)
-    glVertex2f(self.size[0], 0)
+    glVertex2f(0, h)
+    glVertex2f(self.w, self.h)
+    glVertex2f(self.w, 0)
     glEnd()
 
   def showGrid(self):
@@ -97,19 +97,19 @@ class Level:
     glDisable(GL_TEXTURE_2D)
     
     glBegin(GL_LINES)
-    for x in range(self.size[0]):
+    for x in range(self.w):
       glVertex2f(x, 0)
-      glVertex2f(x, self.size[1])
-    for y in range(self.size[1]):
+      glVertex2f(x, self.h)
+    for y in range(self.h]):
       glVertex2f(0, y)
-      glVertex2f(self.size[0], y)
+      glVertex2f(self.w, y)
     glEnd()
 
   def showCollision(self):
     glColor4f(0.0, 1.0, 1.0, 0.25)
     glDisable(GL_TEXTURE_2D)
-    for x in range(0, self.size[0]):
-      for y in range(0, self.size[1]):
+    for x in range(0, self.w):
+      for y in range(0, self.h):
         glPushMatrix()
         glTranslatef(x, y, 0)
         v = self.collision[self.level[y][x]]
