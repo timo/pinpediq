@@ -27,11 +27,16 @@ class Cursor:
 
 main.init()
 
-lvl = level.Level()
-lvlname = "no level loaded"
+lvl = level.Level("krasi")
+lvlname = "krasi"
 lvltext = font.Text(lvlname)
+tiletext = font.Text(lvl.tilemapname)
+
+tilemapx = lvl.w + 2
+tilemapy = 1
 
 lvlcur = Cursor()
+tilecur = Cursor()
 
 running = True
 
@@ -62,24 +67,58 @@ while running:
           lvl.level[lvlcur.y][lvlcur.x] -= 1
         except:
           pass
+    elif ev.type == MOUSEBUTTONDOWN:
+      # is mouse in level area?
+      if 32 <= ev.pos[0] <= 32 + 32 * lvl.w and\
+         32 <= ev.pos[1] <= 32 + 32 * lvl.h:
+        lvlcur.x = ev.pos[0] / 32 - 1
+        lvlcur.y = ev.pos[1] / 32 - 1
+
+        print ev.button
+        if ev.button == 1:
+          lvl.level[lvlcur.y][lvlcur.x] = tilecur.x + tilecur.y * lvl.ttc
+        
+      elif tilemapx * 32 + 32 <= ev.pos[0] <= tilemapx * 32 + 32 + 32 * lvl.ttc and\
+           tilemapy * 32 + 32 <= ev.pos[1] <= tilemapy * 32 + 32 + 32 * lvl.ttc:
+        tilecur.x = ev.pos[0] / 32 - tilemapx - 1
+        tilecur.y = ev.pos[1] / 32 - tilemapy - 1
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
   glLoadIdentity()
   
+  # level
   glPushMatrix()
   glTranslatef(1, 1, 0)
-
   lvl.draw()
   lvl.showBorder()
   lvl.showGrid()
-
   lvlcur.draw()
-
   glPopMatrix()
-
+  
+  # level caption
   glPushMatrix()
   glScalef(32 ** -1, 32 ** -1, 1)
   lvltext.draw()
+  glPopMatrix()
+
+  glPushMatrix()
+  glTranslatef(tilemapx, tilemapy, 0)
+
+  # tilemap
+  glPushMatrix()
+  glTranslatef(1, 1, 0)
+  lvl.drawTileset()
+  lvl.showTilesetBorder()
+  lvl.showTilesetGrid()
+  tilecur.draw()
+  glPopMatrix()
+  
+  # level caption
+  glPushMatrix()
+  glScalef(32 ** -1, 32 ** -1, 1)
+  tiletext.draw()
+  glPopMatrix()
+
   glPopMatrix()
 
   pygame.display.flip()

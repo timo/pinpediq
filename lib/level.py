@@ -21,65 +21,87 @@ class Level:
       self.tilemap = res.getTexture("__dummy__")
       self.ttc = 4
 
-  def load(self, name):
+  def load(self, levelname):
     self.levelname = levelname
 
     lf = open("data/levels/%s.pql" % levelname, "r")
     
-    tilemapname = lf.readline().strip()
+    self.tilemapname = lf.readline().strip()
     (self.w, self.h) = [int(a) for a in lf.readline().strip().split(",")]
 
     self.level = []
     for row in range(self.h):
       self.level.append([int(a) for a in lf.readline().strip().split()])
 
-    self.tilemap = res.getTexture(tilemapname)
+    self.tilemap = res.getTexture(self.tilemapname)
     
-    cf = open("data/tilemaps/%s.pqt" % tilemapname, "r")
+    cf = open("data/tilemaps/%s.pqt" % self.tilemapname, "r")
     self.ttc = int(cf.readline().strip())
     self.collision = []
     for l in cf.readlines():
       self.collision.append(int(l))
 
+  def quad(self, col, row, numx, numy):
+    # this describes the position of the upper left corner
+    w = 1.0 / numx
+    x = col * w
+    h = 1.0 / numy
+    y = row * h
+    zx = 1 / (2.0 * self.tilemap.w)
+    zy = 1 / (2.0 * self.tilemap.h)
+    #zx = 0
+    #zy = 0
+
+    glBegin(GL_QUADS)
+    
+    glTexCoord2f(x + zx, y + zy)
+    glVertex2i(0, 0)
+
+    glTexCoord2f(x + zx, y + h - zy)
+    glVertex2i(0, 1)
+
+    glTexCoord2f(x + w - zx , y + h - zx)
+    glVertex2i(1, 1)
+
+    glTexCoord2f(x + w - zy, y + zy)
+    glVertex2i(1, 0)
+
+    glEnd()
 
   def draw(self):
-    def quad(self, col, row, numx, numy):
-      # this describes the position of the upper left corner
-      w = 1.0 / numx
-      x = col * w
-      h = 1.0 / numy
-      y = row * h
-      zx = 1 / (2.0 * self.tilemap.w)
-      zy = 1 / (2.0 * self.tilemap.h)
-      #zx = 0
-      #zy = 0
-
-      glBegin(GL_QUADS)
-      
-      glTexCoord2f(x + zx, y + zy)
-      glVertex2i(0, 0)
-
-      glTexCoord2f(x + zx, y + h - zy)
-      glVertex2i(0, 1)
-
-      glTexCoord2f(x + w - zx , y + h - zx)
-      glVertex2i(1, 1)
-
-      glTexCoord2f(x + w - zy, y + zy)
-      glVertex2i(1, 0)
-
-      glEnd()
-
     self.tilemap.bind()
-
     glEnable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
     for x in range(0, self.w):
       for y in range(0, self.h):
         glPushMatrix()
         glTranslatef(x, y, 0)
-        quad(self, self.level[y][x] % self.ttc,self.level[y][x] / self.ttc, self.ttc, self.ttc)
+        self.quad(self.level[y][x] % self.ttc,self.level[y][x] / self.ttc, self.ttc, self.ttc)
         glPopMatrix()
+
+  def drawTileset(self):
+    self.tilemap.bind()
+    glEnable(GL_TEXTURE_2D)
+    glColor4f(1.0, 1.0, 1.0, 1.0)
+    for tid in range(self.ttc ** 2):
+      glPushMatrix()
+      glTranslatef(tid % self.ttc, tid / self.ttc, 0)
+      self.quad(tid % self.ttc, tid / self.ttc, self.ttc, self.ttc)
+      glPopMatrix()
+
+  def showTilesetBorder(self):
+    a = (self.w, self.h)
+    self.w = self.ttc
+    self.h = self.ttc
+    self.showBorder()
+    self.w, self.h = a
+
+  def showTilesetGrid(self):
+    a = (self.w, self.h)
+    self.w = self.ttc
+    self.h = self.ttc
+    self.showGrid()
+    self.w, self.h = a
 
   def showBorder(self):
     glColor4f(1, 1, 1, 1)
@@ -87,7 +109,7 @@ class Level:
 
     glBegin(GL_LINE_LOOP)
     glVertex2f(0, 0)
-    glVertex2f(0, h)
+    glVertex2f(0, self.h)
     glVertex2f(self.w, self.h)
     glVertex2f(self.w, 0)
     glEnd()
@@ -100,7 +122,7 @@ class Level:
     for x in range(self.w):
       glVertex2f(x, 0)
       glVertex2f(x, self.h)
-    for y in range(self.h]):
+    for y in range(self.h):
       glVertex2f(0, y)
       glVertex2f(self.w, y)
     glEnd()
