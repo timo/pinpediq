@@ -1,4 +1,5 @@
 import time
+import math
 
 class gameTimer:
   def __init__(self):
@@ -49,6 +50,9 @@ sets an appropriate value for self.curspd"""
     if self.now() % (duration * 2) < duration:
       return True
     return False
+
+  def pulse(self, duration, low = 0, high = 1):
+    return (low + high) / 2. + math.sin(self.now() / duration * 2 * math.pi) * (low - high) / 2
 
   def speed(self):
     """returns the speed at which the game shall run.

@@ -8,7 +8,20 @@ import random
 # 3:  \
 
 class Level:
-  def __init__(self, levelname):
+  def __init__(self, levelname = None):
+    if levelname:
+      self.load(levelname)
+    else:
+      self.size = [4, 4]
+      self.level = [[0, 1, 2, 3],
+                    [3, 2, 1, 0],
+                    [0, 1, 2, 3],
+                    [3, 2, 1, 0]]
+      self.collision = []
+      self.tilemap = res.getTexture("__dummy__")
+      self.ttc = 4
+
+  def load(self, name):
     self.levelname = levelname
 
     lf = open("data/levels/%s.pql" % levelname, "r")
@@ -27,6 +40,7 @@ class Level:
     self.collision = []
     for l in cf.readlines():
       self.collision.append(int(l))
+
 
   def draw(self):
     def quad(self, col, row, numx, numy):
@@ -66,6 +80,30 @@ class Level:
         glTranslatef(x, y, 0)
         quad(self, self.level[y][x] % self.ttc,self.level[y][x] / self.ttc, self.ttc, self.ttc)
         glPopMatrix()
+
+  def showBorder(self):
+    glColor4f(1, 1, 1, 1)
+    glDisable(GL_TEXTURE_2D)
+
+    glBegin(GL_LINE_LOOP)
+    glVertex2f(0, 0)
+    glVertex2f(0, self.size[1])
+    glVertex2f(*self.size)
+    glVertex2f(self.size[0], 0)
+    glEnd()
+
+  def showGrid(self):
+    glColor4f(1, 1, 1, 1)
+    glDisable(GL_TEXTURE_2D)
+    
+    glBegin(GL_LINES)
+    for x in range(self.size[0]):
+      glVertex2f(x, 0)
+      glVertex2f(x, self.size[1])
+    for y in range(self.size[1]):
+      glVertex2f(0, y)
+      glVertex2f(self.size[0], y)
+    glEnd()
 
   def showCollision(self):
     glColor4f(0.0, 1.0, 1.0, 0.25)

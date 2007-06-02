@@ -34,7 +34,7 @@ sets the resolution and sets up the projection matrix"""
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()
 
-def rungame():
+def init():
   # initialize everything
   pygame.init()
   screen = pygame.display.set_mode(screensize, OPENGL|DOUBLEBUF)
@@ -45,6 +45,10 @@ def rungame():
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
   glEnable(GL_LINE_SMOOTH)
   glEnable(GL_TEXTURE_2D)
+
+def rungame():
+  # init all stuff
+  init()
 
   # yay! play the game!
   running = True
@@ -171,7 +175,7 @@ def rungame():
 
       else:
         if plr.vx != 0:
-          plr.vx *= 0.9
+          plr.vx *= 0.99
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
