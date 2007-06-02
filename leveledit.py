@@ -38,6 +38,8 @@ tilemapy = 1
 lvlcur = Cursor()
 tilecur = Cursor()
 
+levelgrid = True
+
 running = True
 
 timing.timer.startTiming()
@@ -67,6 +69,8 @@ while running:
           lvl.level[lvlcur.y][lvlcur.x] -= 1
         except:
           pass
+      elif ev.key == K_g:
+        levelgrid = not levelgrid
     elif ev.type == MOUSEBUTTONDOWN:
       # is mouse in level area?
       if 32 <= ev.pos[0] <= 32 + 32 * lvl.w and\
@@ -74,9 +78,9 @@ while running:
         lvlcur.x = ev.pos[0] / 32 - 1
         lvlcur.y = ev.pos[1] / 32 - 1
 
-        print ev.button
         if ev.button == 1:
-          lvl.level[lvlcur.y][lvlcur.x] = tilecur.x + tilecur.y * lvl.ttc
+          try: lvl.level[lvlcur.y][lvlcur.x] = tilecur.x + tilecur.y * lvl.ttc
+          except: pass
         
       elif tilemapx * 32 + 32 <= ev.pos[0] <= tilemapx * 32 + 32 + 32 * lvl.ttc and\
            tilemapy * 32 + 32 <= ev.pos[1] <= tilemapy * 32 + 32 + 32 * lvl.ttc:
@@ -91,7 +95,8 @@ while running:
   glTranslatef(1, 1, 0)
   lvl.draw()
   lvl.showBorder()
-  lvl.showGrid()
+  if levelgrid:
+    lvl.showGrid()
   lvlcur.draw()
   glPopMatrix()
   
@@ -104,7 +109,7 @@ while running:
   glPushMatrix()
   glTranslatef(tilemapx, tilemapy, 0)
 
-  # tilemap
+  # tileset
   glPushMatrix()
   glTranslatef(1, 1, 0)
   lvl.drawTileset()
@@ -113,7 +118,7 @@ while running:
   tilecur.draw()
   glPopMatrix()
   
-  # level caption
+  # tileset caption
   glPushMatrix()
   glScalef(32 ** -1, 32 ** -1, 1)
   tiletext.draw()
