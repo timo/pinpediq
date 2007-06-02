@@ -59,8 +59,8 @@ def rungame():
   plr = sprite.Sprite("player")
   plr.x = 2
   plr.y = -4
-  plr.w = 0.75
-  plr.h = 0.75
+  plr.w = 1
+  plr.h = 0.9
   plr.health = 100
 
   possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1),

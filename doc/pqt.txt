@@ -18,8 +18,21 @@
    this line contains the type of collision of that tile:
 
    0: air, non-colliding
+
    1: wall, fully colliding
+
    2: slope /
    3: slope \
+
    4: platform, blocks only from above. player can fall through
    5: platform, blocks only from above. player can't fall through
+
+   6: shallow slope / left part
+   7: shallow slope / right part
+   8: shallow slope \ left part
+   9: shallow slope \ right part
+
+  10: steep slope / lower part
+  11: steep slope / upper part
+  12: steep slope \ lower part
+  13: steep slope \ upper part

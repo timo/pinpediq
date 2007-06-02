@@ -82,7 +82,9 @@ class Sprite:
       #self.markTile(tx, tily)
       if tily >= self.lev.h or tx >= self.lev.w:
         return True
-      if self.lev.collision[self.lev.level[tily][tx]] == 1 or (self.lev.collision[self.lev.level[tily][tx]] in [4, 5] and self.vy > 0):
+      if self.lev.collision[self.lev.level[tily][tx]] == 1:
+        return True
+      elif self.lev.collision[self.lev.level[tily][tx]] in [4, 5] and self.vy > 0 and tily - self.y >= self.h:
         return True
 
     return False
@@ -127,6 +129,9 @@ class Sprite:
 
     glPushMatrix()
     glTranslatef(self.x, self.y, 0)
+    if self.vx < 0:
+      glTranslatef(self.w, 0, 0)
+      glScalef(-1, 1, 0)
     glScalef(self.w, self.h, 1)
 
     glBegin(GL_QUADS)
