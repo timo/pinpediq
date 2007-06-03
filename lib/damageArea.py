@@ -62,14 +62,14 @@ class RectDamage:
       dvx /= len
       dvy /= len
       other.vx = dvx * self.damage / 5 + random.random() - 0.5
-      other.vy = dvy * self.damage / 5 - 2 + random.random() - 0.5
+      other.vy = dvy * self.damage / 5 - 2 + random.random() - 1.0
 
       other.health -= self.damage
       if random.random() < 0.1:
         other.setstate('frozen', 5)
         other.vy -= 2
       else:
-        other.setstate('ouch', 1)
+        other.setstate('ouch', 0.75)
 
 class ArcDamage(RectDamage):
   def __init__(self, x, y, vx, vy, ra, sa, ea, lifetime, damage = 10):

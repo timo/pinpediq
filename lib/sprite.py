@@ -125,7 +125,11 @@ class Sprite:
       image.bind()
     else:
       self.img.bind()
-    glColor4f(1.0, 1.0, 1.0, alpha)
+
+    if self.state == "ouch" and timer.blink(0.1):
+      glColor4f(1.0, 1.0, 1.0, alpha / 2)
+    else:
+      glColor4f(1.0, 1.0, 1.0, alpha)
 
     glPushMatrix()
     glTranslatef(self.x, self.y, 0)
