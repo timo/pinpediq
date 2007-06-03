@@ -90,16 +90,19 @@ class Sprite:
     return False
 
   def checkCollision(self, vx, vy):
+    hit = [False] * 4 # left, right, top, bottom
     if vx > 0:
       if self.checkVerLine(self.x + vx + self.w, self.y):
         self.x = int(self.x + vx) - self.w + 1
-        self.vx = 0
+        #self.vx = 0
+        hit[1] = True
       else:
         self.x += vx
     elif vx < 0:
       if self.checkVerLine(self.x + vx, self.y):
         self.x = int(self.x + vx) + 1
-        self.vx = 0
+        #self.vx = 0
+        hit[0] = True
       else:
         self.x += vx
 
@@ -108,6 +111,7 @@ class Sprite:
         self.y = int(self.y + vy) - self.h + 1
         self.vy = 0
         self.physics = 'standing'
+        hit[3] = True
       else:
         self.y += vy
         self.physics = 'falling'
@@ -116,9 +120,24 @@ class Sprite:
         self.y = int(self.y + vy) + 1
         self.vy = self.vy * -0.25
         self.physics = 'falling'
+        hit[2] = True
       else:
         self.y += vy
         self.physics = 'falling'
+
+    if hit[0]:
+      self.hitLeft()
+    elif hit[1]:
+      self.hitRight()
+    if hit[2]:
+      self.hitTop()
+    elif hit[3]:
+      self.hitBottom()
+
+  def hitLeft(self):   pass
+  def hitRight(self):  pass
+  def hitTop(self):    pass
+  def hitBottom(self): pass
 
   def draw(self, image = None, alpha = 1.0):
     if image:
