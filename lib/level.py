@@ -19,9 +19,11 @@ class Level:
                     [3, 2, 1, 0]]
       self.collision = []
       self.tilemap = res.getTexture("__dummy__")
+      self.tilemapname = "__dummy__"
       self.ttc = 4
 
   def load(self, levelname):
+    print "level loading", levelname
     self.levelname = levelname
 
     lf = open("data/levels/%s.pql" % levelname, "r")
@@ -33,6 +35,10 @@ class Level:
     for row in range(self.h):
       self.level.append([int(a) for a in lf.readline().strip().split()])
 
+    self.loadTileset(self.tilemapname)
+
+  def loadTileset(self, tilemapname):
+    self.tilemapname = tilemapname
     self.tilemap = res.getTexture(self.tilemapname)
     
     cf = open("data/tilemaps/%s.pqt" % self.tilemapname, "r")
