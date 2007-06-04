@@ -14,8 +14,8 @@
    [7|8|9]
 
 - following that:
-   for each tile in the tilemap there is one collision information line
-   this line contains the type of collision of that tile:
+   for each tile in the tilemap there is one collision information "square".
+   this square contains the type of collision of that tile:
 
    0: air, non-colliding
 
@@ -36,3 +36,11 @@
   11: steep slope / upper part
   12: steep slope \ lower part
   13: steep slope \ upper part
+
+
+example: a 4*4 tileset
+4
+0  1  1  1
+0  0  2  3
+1  1  4  5
+10 11 12 13

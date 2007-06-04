@@ -58,7 +58,9 @@ class Level:
     self.ttc = int(cf.readline().strip())
     self.collision = []
     for l in cf.readlines():
-      self.collision.append(int(l))
+      print "reading", l
+      self.collision.extend([int(lp) for lp in l.split(" ")])
+      print self.collision
 
   def quad(self, col, row, numx, numy):
     # this describes the position of the upper left corner
