@@ -54,11 +54,11 @@ def rungame():
   running = True
   timer.startTiming()
 
-  lvl = level.load("krasi")
+  lvl = level.load("rageons")
 
   plr = sprite.Sprite("player")
   plr.x = 2
-  plr.y = -4
+  plr.y = 7
   plr.w = 1.0
   plr.h = 0.9
   plr.health = 100
