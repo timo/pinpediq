@@ -2,16 +2,15 @@
 ===========================
 
 - first line:
-   number of horitontal and vertical divisions in a tilemap:
+   number of horitontal and vertical divisions in a tilemap: (comma seperated)
     _
-   [1]     ttc = 1
+   [1]     ttw = 1, tth = 1
     ___
-   [1|2]   ttc = 2
+   [1|2]   ttw = 2, tth = 2
    [3|4]
     _____
-   [1|2|3] ttc = 3
+   [1|2|3] ttw = 3, tth = 2
    [4|5|6]
-   [7|8|9]
 
 - following that:
    for each tile in the tilemap there is one collision information "square".
@@ -39,7 +38,7 @@
 
 
 example: a 4*4 tileset
-4
+4, 4
 0  1  1  1
 0  0  2  3
 1  1  4  5

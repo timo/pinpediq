@@ -138,13 +138,13 @@ class TileSetArea(tinygui.Area):
       mpx = (ev.pos[0] - self.rect.x) / 32
       mpy = (ev.pos[1] - self.rect.y) / 32
 
-      if 0 <= mpx < self.lvlarea.lvl.ttc and 0 <= mpy < self.lvlarea.lvl.ttc:
-        self.tilesel = mpx + mpy * self.lvlarea.lvl.ttc
+      if 0 <= mpx < self.lvlarea.lvl.ttw and 0 <= mpy < self.lvlarea.lvl.tth:
+        self.tilesel = mpx + mpy * self.lvlarea.lvl.ttw
         self.cursor.x = mpx
         self.cursor.y = mpy
 
   def setPosition(self):
-    self.rect = pygame.Rect(32, 32, self.lvlarea.lvl.ttc * 32, self.lvlarea.lvl.ttc * 32)
+    self.rect = pygame.Rect(32, 32, self.lvlarea.lvl.ttw * 32, self.lvlarea.lvl.tth * 32)
     self.rect.left = self.lvlarea.lvl.w * 32 + 64
     try:
       self.tsna.setPosition()

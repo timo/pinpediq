@@ -20,7 +20,8 @@ class Level:
       self.collision = []
       self.tilemap = res.getTexture("__dummy__")
       self.tilemapname = "__dummy__"
-      self.ttc = 4
+      self.ttw = 4
+      self.tth = 4
 
   def load(self, levelname):
     print "level loading", levelname
@@ -55,12 +56,10 @@ class Level:
     self.tilemap = res.getTexture(self.tilemapname)
     
     cf = open("data/tilemaps/%s.pqt" % self.tilemapname, "r")
-    self.ttc = int(cf.readline().strip())
+    (self.ttw, self.tth) = [int(a) for a in cf.readline().strip().split(",")]
     self.collision = []
     for l in cf.readlines():
-      print "reading", l
       self.collision.extend([int(lp) for lp in l.split(" ")])
-      print self.collision
 
   def quad(self, col, row, numx, numy):
     # this describes the position of the upper left corner
@@ -97,30 +96,30 @@ class Level:
       for y in range(0, self.h):
         glPushMatrix()
         glTranslatef(x, y, 0)
-        self.quad(self.level[y][x] % self.ttc,self.level[y][x] / self.ttc, self.ttc, self.ttc)
+        self.quad(self.level[y][x] % self.ttw,self.level[y][x] / self.ttw, self.ttw, self.tth)
         glPopMatrix()
 
   def drawTileset(self):
     self.tilemap.bind()
     glEnable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
-    for tid in range(self.ttc ** 2):
+    for tid in range(self.ttw * self.tth):
       glPushMatrix()
-      glTranslatef(tid % self.ttc, tid / self.ttc, 0)
-      self.quad(tid % self.ttc, tid / self.ttc, self.ttc, self.ttc)
+      glTranslatef(tid % self.ttw, tid / self.ttw, 0)
+      self.quad(tid % self.ttw, tid / self.ttw, self.ttw, self.tth)
       glPopMatrix()
 
   def showTilesetBorder(self):
     a = (self.w, self.h)
-    self.w = self.ttc
-    self.h = self.ttc
+    self.w = self.ttw
+    self.h = self.tth
     self.showBorder()
     self.w, self.h = a
 
   def showTilesetGrid(self):
     a = (self.w, self.h)
-    self.w = self.ttc
-    self.h = self.ttc
+    self.w = self.ttw
+    self.h = self.tth
     self.showGrid()
     self.w, self.h = a
 
