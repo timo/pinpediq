@@ -102,6 +102,7 @@ class LevelNameArea(tinygui.TextInputArea):
       tinygui.popup("level %s loaded" % (self.text))
     except IOError:
       self.lvlarea.updateLevel(level.load(None))
+      self.lvlarea.lvl.levelname = self.text
       tinygui.popup("new level %s" % (self.text))
 
 class TileSetNameArea(tinygui.TextInputArea):
