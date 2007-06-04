@@ -22,7 +22,7 @@ class enemy(Sprite):
     self.aiState = 'walking'
 
     self.aiStateTraversals = \
-      {'walking': [('walking', i/3 + 1) for i in range(10)] + [('jumping', 0), ('standing', 1), ('turnAround', 0)],
+      {'walking': [('walking', i/3 + 1) for i in range(5)] + [('jumping', 0), ('standing', 1), ('turnAround', 0)],
        'jumping': [('walking', 5)],
        'ranAgainstWallRight': [('walkBackLeft', 0.75)],
        'ranAgainstWallLeft':  [('walkBackRight',0.75)],

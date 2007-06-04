@@ -35,7 +35,20 @@ class Level:
     for row in range(self.h):
       self.level.append([int(a) for a in lf.readline().strip().split()])
 
+    lf.close()
+
     self.loadTileset(self.tilemapname)
+
+  def save(self):
+    lf = open("data/levels/%s.pql" % self.levelname, "w")
+
+    lf.write(self.tilemapname + "\n")
+    lf.write("%s, %s" % (self.w, self.h) + "\n")
+
+    for row in self.level:
+      lf.write(" ".join(str(a) for a in row) + "\n")
+
+    lf.close()
 
   def loadTileset(self, tilemapname):
     self.tilemapname = tilemapname

@@ -77,6 +77,7 @@ class TextInputArea(Area):
     self.prompt = prompt
     self.children = []
     self.focus = False
+    self.background = False
 
   def handleEvent(self, ev):
     if ev.type == KEYDOWN:
@@ -95,6 +96,16 @@ class TextInputArea(Area):
   def draw(self):
     glPushMatrix()
     glTranslatef(self.rect.x / 32., self.rect.y / 32., 0)
+    if self.background:
+      glDisable(GL_TEXTURE_2D)
+      glColor4f(0, 1, 0, 0.25)
+      glBegin(GL_QUADS)
+      glVertex2f(0, 0)
+      glVertex2f(0, self.rect.h)
+      glVertex2f(self.rect.w, self.rect.h)
+      glVertex2f(self.rect.w, 0)
+      glEnd()
+      glColor4f(1, 1, 1, 1)
     glScalef(32 ** -1, 32 ** -1, 1)
     self.font.draw()
     glPopMatrix()

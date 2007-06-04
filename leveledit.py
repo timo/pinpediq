@@ -25,6 +25,66 @@ class Cursor:
 
     glPopMatrix()
 
+class CommandInputArea(tinygui.TextInputArea):
+  def __init__(self, parent):
+    tinygui.TextInputArea.__init__(self,
+        "",
+        pygame.Rect(0, 768 - 32, 1024, 32),
+        "cmd: ")
+
+    self.lvlarea = parent
+    self.background = True
+
+  def inputDone(self):
+    if self.text == "save":
+      try:
+        self.lvlarea.lvl.save()
+        tinygui.popup("level saved as '%s'" % self.lvlarea.lvl.levelname)
+      except Exception, e:
+        tinygui.popup("exception caught while saving: %s" % str(e))
+
+    elif self.text == "info":
+      tinygui.popup("level is %s * %s big." % (self.lvlarea.lvl.w, self.lvlarea.lvl.h))
+
+    elif self.text[:4] == "w = ":
+      try:
+        w = int(self.text[4:])
+      except:
+        tinygui.popup("error in input.")
+        return
+      if w <= 0:
+        tinygui.popup("invalid value.")
+      elif w == self.lvlarea.lvl.w:
+        tinygui.popup("level width unchanged.")
+      elif w < self.lvlarea.lvl.w:
+        for row in self.lvlarea.lvl.level:
+          del row[w:]
+      elif w > self.lvlarea.lvl.w:
+        for row in self.lvlarea.lvl.level:
+          row.extend([0] * (w - self.lvlarea.lvl.w))
+
+      self.lvlarea.lvl.w = w
+      self.lvlarea.updateLevel()
+
+    elif self.text[:4] == "h = ":
+      try:
+        h = int(self.text[4:])
+      except:
+        tinygui.popup("error in input.")
+        return
+      if h <= 0:
+        tinygui.popup("invalid value.")
+      elif h == self.lvlarea.lvl.h:
+        tinygui.popup("level height unchanged.")
+      elif h < self.lvlarea.lvl.h:
+        del self.lvlarea.lvl.level[h:]
+      elif h > self.lvlarea.lvl.h:
+        for i in range(self.lvlarea.lvl.h, h):
+          self.lvlarea.lvl.level.append([0] * self.lvlarea.lvl.w)
+
+      self.lvlarea.lvl.h = h
+      self.lvlarea.updateLevel()
+
 class LevelNameArea(tinygui.TextInputArea):
   def __init__(self, parent):
     self.lvlarea = parent
@@ -109,12 +169,14 @@ class LevelArea(tinygui.Area):
     self.rect = pygame.Rect(0, 0, self.lvl.w * 32, self.lvl.h * 32 + 32)
     self.lna = LevelNameArea(self)
     self.tsa = TileSetArea(self)
-    self.children = [self.lna, self.tsa]
+    self.cmd = CommandInputArea(self)
+    self.children = [self.lna, self.tsa, self.cmd]
     self.displayGrid = True
     self.cursor = Cursor()
 
-  def updateLevel(self, newlevel):
-    self.lvl = newlevel
+  def updateLevel(self, newlevel = None):
+    if newlevel:
+      self.lvl = newlevel
     self.rect = pygame.Rect(0, 0, self.lvl.w * 32 + 32, self.lvl.h * 32 + 32)
     self.lna.setPosition()
     self.tsa.setPosition()
