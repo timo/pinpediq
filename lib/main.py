@@ -54,7 +54,7 @@ def rungame():
   running = True
   timer.startTiming()
 
-  lvl = level.load("rageons")
+  lvl = level.load("typetest")
 
   plr = sprite.Sprite("player")
   plr.x = 2
