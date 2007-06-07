@@ -82,7 +82,7 @@ def rungame():
     ne = enemy.enemy("enemy")
     (ne.x, ne.y) = random.choice(possiblepositions)
     #possiblepositions.remove((ne.x, ne.y))
-    (ne.w, ne.h) = (0.6, 0.6)
+    (ne.w, ne.h) = (1, 1)
     ne.vx = 0.5
     enemies.append(ne)
     ppain.append(damageArea.RectDamage(ne.x, ne.y, ne.w, ne.h, ne.vx, ne.vy, -1, 10))
