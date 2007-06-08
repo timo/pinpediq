@@ -145,10 +145,10 @@ class TileSetArea(tinygui.Area):
         self.cursor.y = mpy
 
     elif ev.type == KEYDOWN:
-      md = {K_UP:    ( 0, -1),
-            K_DOWN:  ( 0,  1),
-            K_LEFT:  (-1,  0),
-            K_RIGHT: ( 1,  0),
+      md = {K_UP:    ( 0, -6),
+            K_DOWN:  ( 0,  6),
+            K_LEFT:  (-6,  0),
+            K_RIGHT: ( 6,  0),
            }
       if ev.key == K_g:
         self.displayGrid = not self.displayGrid
@@ -219,10 +219,10 @@ class LevelArea(tinygui.Area):
     elif ev.type == MOUSEBUTTONUP:
       self.mbdown = False
     elif ev.type == KEYDOWN:
-      md = {K_UP:    ( 0, -1),
-            K_DOWN:  ( 0,  1),
-            K_LEFT:  (-1,  0),
-            K_RIGHT: ( 1,  0),
+      md = {K_UP:    ( 0, -6),
+            K_DOWN:  ( 0,  6),
+            K_LEFT:  (-6,  0),
+            K_RIGHT: ( 6,  0),
            }
       if ev.key == K_g:
         self.displayGrid = not self.displayGrid
