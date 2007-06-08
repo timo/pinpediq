@@ -187,6 +187,7 @@ class LevelArea(tinygui.Area):
     self.children = [self.lna, self.tsa, self.cmd]
     self.displayGrid = True
     self.cursor = Cursor()
+    self.mbdown = False
 
   def updateLevel(self, newlevel = None):
     if newlevel:
@@ -198,12 +199,15 @@ class LevelArea(tinygui.Area):
     self.lna.setPosition()
     self.tsa.setPosition()
     self.tsa.tsna.setText(self.lvl.tileset.name)
-    (self.cursor.x, self.cursor.y) = (0, 0)
+    self.cursor.x, self.cursor.y = 0, 0
 
   def handleEvent(self, ev):
-    if ev.type == MOUSEBUTTONDOWN and ev.button == 1:
+    if (ev.type == MOUSEBUTTONDOWN and ev.button == 1) or \
+       (ev.type == MOUSEMOTION and self.mbdown):
       tpx = (ev.pos[0] - self.rect.x - 32) / 32
       tpy = (ev.pos[1] - self.rect.y - 32) / 32
+
+      self.mbdown = True
 
       if 0 <= tpx < self.scroller.areaw and 0 <= tpy < self.scroller.areah:
         tpx += self.scroller.x
@@ -212,6 +216,8 @@ class LevelArea(tinygui.Area):
           self.lvl.level[tpy][tpx] = self.tsa.tilesel
           self.cursor.x = tpx
           self.cursor.y = tpy
+    elif ev.type == MOUSEBUTTONUP:
+      self.mbdown = False
     elif ev.type == KEYDOWN:
       md = {K_UP:    ( 0, -1),
             K_DOWN:  ( 0,  1),
