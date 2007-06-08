@@ -133,7 +133,7 @@ class TileSetArea(tinygui.Area):
     self.cursor = Cursor()
 
   def handleEvent(self, ev):
-    if ev.type == MOUSEBUTTONDOWN:
+    if ev.type == MOUSEBUTTONDOWN and ev.button == 1:
       mpx = (ev.pos[0] - self.rect.x) / 32
       mpy = (ev.pos[1] - self.rect.y) / 32
 
@@ -201,16 +201,17 @@ class LevelArea(tinygui.Area):
     (self.cursor.x, self.cursor.y) = (0, 0)
 
   def handleEvent(self, ev):
-    if ev.type == MOUSEBUTTONDOWN:
+    if ev.type == MOUSEBUTTONDOWN and ev.button == 1:
       tpx = (ev.pos[0] - self.rect.x - 32) / 32
       tpy = (ev.pos[1] - self.rect.y - 32) / 32
 
       if 0 <= tpx < self.scroller.areaw and 0 <= tpy < self.scroller.areah:
         tpx += self.scroller.x
         tpy += self.scroller.y
-        self.lvl.level[tpy][tpx] = self.tsa.tilesel
-        self.cursor.x = tpx
-        self.cursor.y = tpy
+        if 0 <= tpx < self.lvl.w and 0 <= tpy < self.lvl.h:
+          self.lvl.level[tpy][tpx] = self.tsa.tilesel
+          self.cursor.x = tpx
+          self.cursor.y = tpy
     elif ev.type == KEYDOWN:
       md = {K_UP:    ( 0, -1),
             K_DOWN:  ( 0,  1),
