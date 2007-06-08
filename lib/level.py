@@ -66,8 +66,8 @@ class TilesetView(Tileset):
     sx, sy, sw, sh = self.scroller.levelScroll()
     self.scroller.scroll()
     glColor4f(1.0, 1.0, 1.0, 1.0)
-    for tx in range(sx, sw):
-      for ty in range(sy, sh):
+    for tx in range(sx, sx + sw):
+      for ty in range(sy, sy + sh):
         glPushMatrix()
         glTranslatef(tx, ty, 0)
         self.quad(tx, ty)
@@ -185,9 +185,9 @@ class Level:
 
   def draw(self):
     if self.scroller:
-      (sx, sy, sw, sh) = self.scroller.levelScroll()
+      sx, sy, sw, sh = self.scroller.levelScroll()
     else:
-      (sx, sy, sw, sh) = (0, 0, self.w, self.h)
+      sx, sy, sw, sh = 0, 0, self.w, self.h
 
     self.tileset.bind()
     glEnable(GL_TEXTURE_2D)
