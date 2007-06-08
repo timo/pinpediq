@@ -67,6 +67,8 @@ def rungame():
   possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1),
                        (1, 8)]
 
+  possibleenemys = ["enemy", "enemy2", "enemy3", "enemy4"]
+
   #possiblepositions = []
   #for y in range(lvl.h):
   #  for x in range(lvl.w):
@@ -80,7 +82,7 @@ def rungame():
   ppain = []
 
   for i in range(5):
-    ne = enemy.enemy("enemy")
+    ne = enemy.enemy(random.choice(possibleenemys))
     (ne.x, ne.y) = random.choice(possiblepositions)
     #possiblepositions.remove((ne.x, ne.y))
     (ne.w, ne.h) = (1, 1)
