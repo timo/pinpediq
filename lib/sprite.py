@@ -63,7 +63,7 @@ class Sprite:
       #self.markTile(tilx, ty)
       if ty >= self.lev.h or tilx >= self.lev.w:
         return True
-      if self.lev.collision[self.lev.level[ty][tilx]] == 1:
+      if self.lev.tileset.collision[self.lev.level[ty][tilx]] == 1:
         return True
 
     return False
@@ -82,9 +82,9 @@ class Sprite:
       #self.markTile(tx, tily)
       if tily >= self.lev.h or tx >= self.lev.w:
         return True
-      if self.lev.collision[self.lev.level[tily][tx]] == 1:
+      if self.lev.tileset.collision[self.lev.level[tily][tx]] == 1:
         return True
-      elif self.lev.collision[self.lev.level[tily][tx]] in [4, 5] and self.vy > 0 and tily - self.y >= self.h:
+      elif self.lev.tileset.collision[self.lev.level[tily][tx]] in [4, 5] and self.vy > 0 and tily - self.y >= self.h:
         return True
 
     return False

@@ -1,4 +1,4 @@
-import res
+import res, scroll
 from OpenGL.GL import *
 import random
 # Collisions:
@@ -7,70 +7,41 @@ import random
 # 2:  /
 # 3:  \
 
-class Level:
-  def __init__(self, levelname = None):
-    if levelname:
-      self.load(levelname)
-    else:
-      (self.w, self.h) = (4, 4)
-      self.level = [[0, 1, 2, 3],
-                    [3, 2, 1, 0],
-                    [0, 1, 2, 3],
-                    [3, 2, 1, 0]]
+class Tileset:
+  def __init__(self, tilesetname = "__dummy__"):
+    self.name = tilesetname
+    self.img = res.getTexture(self.name)
+    self.w = self.img.w
+    self.h = self.img.h
+
+    if self.name != "__dummy__":
+      cf = open("data/tilemaps/%s.pqt" % self.name, "r")
+      self.ttw, self.tth = [int(a) for a in cf.readline().strip().split(",")]
       self.collision = []
-      self.tilemap = res.getTexture("__dummy__")
-      self.tilemapname = "__dummy__"
-      self.ttw = 4
-      self.tth = 4
+      for l in cf.readlines():
+        self.collision.extend([int(lp) for lp in l.split(" ")])
+    else:
+      self.ttw, self.tth = 4, 4
+      self.collisions = [0] * 16
 
-  def load(self, levelname):
-    print "level loading", levelname
-    self.levelname = levelname
+  def bind(self):
+    self.img.bind()
 
-    lf = open("data/levels/%s.pql" % levelname, "r")
-    
-    self.tilemapname = lf.readline().strip()
-    (self.w, self.h) = [int(a) for a in lf.readline().strip().split(",")]
-
-    self.level = []
-    for row in range(self.h):
-      self.level.append([int(a) for a in lf.readline().strip().split()])
-
-    lf.close()
-
-    self.loadTileset(self.tilemapname)
-
-  def save(self):
-    lf = open("data/levels/%s.pql" % self.levelname, "w")
-
-    lf.write(self.tilemapname + "\n")
-    lf.write("%s, %s" % (self.w, self.h) + "\n")
-
-    for row in self.level:
-      lf.write(" ".join(str(a) for a in row) + "\n")
-
-    lf.close()
-
-  def loadTileset(self, tilemapname):
-    self.tilemapname = tilemapname
-    self.tilemap = res.getTexture(self.tilemapname)
-    
-    cf = open("data/tilemaps/%s.pqt" % self.tilemapname, "r")
-    (self.ttw, self.tth) = [int(a) for a in cf.readline().strip().split(",")]
-    self.collision = []
-    for l in cf.readlines():
-      self.collision.extend([int(lp) for lp in l.split(" ")])
-
-  def quad(self, col, row, numx, numy):
+class TilesetView(Tileset):
+  def __init__(self, name, scroller = None):
+    Tileset.__init__(self, name)
+    self.scroller = scroller or scroll.ScrollView(10, 10)
+    self.scroller.changeArea(self.ttw, self.tth)
+    self.scroller.scrollTo(0, 0)
+  
+  def quad(self, col, row):
     # this describes the position of the upper left corner
-    w = 1.0 / numx
+    w = 1.0 / self.ttw
     x = col * w
-    h = 1.0 / numy
+    h = 1.0 / self.tth
     y = row * h
-    zx = 1 / (2.0 * self.tilemap.w)
-    zy = 1 / (2.0 * self.tilemap.h)
-    #zx = 0
-    #zy = 0
+    zx = 1 / (2.0 * self.w)
+    zy = 1 / (2.0 * self.h)
 
     glBegin(GL_QUADS)
     
@@ -89,39 +60,20 @@ class Level:
     glEnd()
 
   def draw(self):
-    self.tilemap.bind()
     glEnable(GL_TEXTURE_2D)
+    self.bind()
+    glPushMatrix()
+    sx, sy, sw, sh = self.scroller.levelScroll()
+    self.scroller.scroll()
     glColor4f(1.0, 1.0, 1.0, 1.0)
-    for x in range(0, self.w):
-      for y in range(0, self.h):
+    for tx in range(sx, sw):
+      for ty in range(sy, sh):
         glPushMatrix()
-        glTranslatef(x, y, 0)
-        self.quad(self.level[y][x] % self.ttw,self.level[y][x] / self.ttw, self.ttw, self.tth)
+        glTranslatef(tx, ty, 0)
+        self.quad(tx, ty)
         glPopMatrix()
 
-  def drawTileset(self):
-    self.tilemap.bind()
-    glEnable(GL_TEXTURE_2D)
-    glColor4f(1.0, 1.0, 1.0, 1.0)
-    for tid in range(self.ttw * self.tth):
-      glPushMatrix()
-      glTranslatef(tid % self.ttw, tid / self.ttw, 0)
-      self.quad(tid % self.ttw, tid / self.ttw, self.ttw, self.tth)
-      glPopMatrix()
-
-  def showTilesetBorder(self):
-    a = (self.w, self.h)
-    self.w = self.ttw
-    self.h = self.tth
-    self.showBorder()
-    self.w, self.h = a
-
-  def showTilesetGrid(self):
-    a = (self.w, self.h)
-    self.w = self.ttw
-    self.h = self.tth
-    self.showGrid()
-    self.w, self.h = a
+    glPopMatrix()
 
   def showBorder(self):
     glColor4f(1, 1, 1, 1)
@@ -129,9 +81,9 @@ class Level:
 
     glBegin(GL_LINE_LOOP)
     glVertex2f(0, 0)
-    glVertex2f(0, self.h)
-    glVertex2f(self.w, self.h)
-    glVertex2f(self.w, 0)
+    glVertex2f(0, self.scroller.h)
+    glVertex2f(self.scroller.w, self.scroller.h)
+    glVertex2f(self.scroller.w, 0)
     glEnd()
 
   def showGrid(self):
@@ -139,12 +91,136 @@ class Level:
     glDisable(GL_TEXTURE_2D)
     
     glBegin(GL_LINES)
-    for x in range(self.w):
+    for x in range(self.scroller.w):
       glVertex2f(x, 0)
-      glVertex2f(x, self.h)
-    for y in range(self.h):
+      glVertex2f(x, self.scroller.h)
+    for y in range(self.scroller.h):
       glVertex2f(0, y)
-      glVertex2f(self.w, y)
+      glVertex2f(self.scroller.w, y)
+    glEnd()
+
+class DummyTileset(Tileset):
+  def __init__(self):
+    self.collision = []
+    self.img = res.getTexture("__dummy__")
+    self.name = "__dummy__"
+    self.ttw = 4
+    self.tth = 4
+
+class DummyTilesetView(TilesetView):
+  def __init__(self):
+    TilesetView.__init__("__dummy__", scroll.ScrollView(4, 4))
+
+class Level:
+  def __init__(self, levelname = None, scroller = None, tilesetclass=Tileset):
+    if levelname:
+      self.load(levelname, tilesetclass)
+    else:
+      (self.w, self.h) = (4, 4)
+      self.level = [[0, 1, 2, 3],
+                    [3, 2, 1, 0],
+                    [0, 1, 2, 3],
+                    [3, 2, 1, 0]]
+      
+      self.tileset = DummyTileset()
+
+    self.setScroller(scroller or scroll.ScrollView(self.w, self.h))
+
+  def setScroller(self, scroller):
+    self.scroller = scroller
+    self.scroller.changeArea(self.w, self.h)
+    self.scroller.scrollTo(0, 0)
+
+  def load(self, levelname, tilesetclass = Tileset):
+    self.levelname = levelname
+
+    lf = open("data/levels/%s.pql" % levelname, "r")
+    
+    self.tilesetname = lf.readline().strip()
+    (self.w, self.h) = [int(a) for a in lf.readline().strip().split(",")]
+
+    self.level = []
+    for row in range(self.h):
+      self.level.append([int(a) for a in lf.readline().strip().split()])
+
+    lf.close()
+
+    self.tileset = tilesetclass(self.tilesetname)
+
+  def save(self):
+    lf = open("data/levels/%s.pql" % self.levelname, "w")
+
+    lf.write(self.tileset.name + "\n")
+    lf.write("%s, %s" % (self.w, self.h) + "\n")
+
+    for row in self.level:
+      lf.write(" ".join(str(a) for a in row) + "\n")
+
+    lf.close()
+
+  def quad(self, col, row, numx, numy):
+    # this describes the position of the upper left corner
+    w = 1.0 / numx
+    x = col * w
+    h = 1.0 / numy
+    y = row * h
+    zx = 1 / (2.0 * self.tileset.w)
+    zy = 1 / (2.0 * self.tileset.h)
+
+    glBegin(GL_QUADS)
+    
+    glTexCoord2f(x + zx, y + zy)
+    glVertex2i(0, 0)
+
+    glTexCoord2f(x + zx, y + h - zy)
+    glVertex2i(0, 1)
+
+    glTexCoord2f(x + w - zx , y + h - zx)
+    glVertex2i(1, 1)
+
+    glTexCoord2f(x + w - zy, y + zy)
+    glVertex2i(1, 0)
+
+    glEnd()
+
+  def draw(self):
+    if self.scroller:
+      (sx, sy, sw, sh) = self.scroller.levelScroll()
+    else:
+      (sx, sy, sw, sh) = (0, 0, self.w, self.h)
+
+    self.tileset.bind()
+    glEnable(GL_TEXTURE_2D)
+    glColor4f(1.0, 1.0, 1.0, 1.0)
+    for x in range(  sx, sx + sw):
+      for y in range(sy, sy + sh):
+        glPushMatrix()
+        glTranslatef(x, y, 0)
+        self.quad(self.level[y][x] % self.tileset.ttw, self.level[y][x] / self.tileset.ttw, self.tileset.ttw, self.tileset.tth)
+        glPopMatrix()
+
+  def showBorder(self):
+    glColor4f(1, 1, 1, 1)
+    glDisable(GL_TEXTURE_2D)
+
+    glBegin(GL_LINE_LOOP)
+    glVertex2f(0, 0)
+    glVertex2f(0, self.scroller.h)
+    glVertex2f(self.scroller.w, self.scroller.h)
+    glVertex2f(self.scroller.w, 0)
+    glEnd()
+
+  def showGrid(self):
+    glColor4f(1, 1, 1, 1)
+    glDisable(GL_TEXTURE_2D)
+    
+    glBegin(GL_LINES)
+    for x in range(self.scroller.w):
+      glVertex2f(x, 0)
+      glVertex2f(x, self.scroller.h)
+    for y in range(self.scroller.h):
+      glVertex2f(0, y)
+      glVertex2f(self.scroller.w, y)
     glEnd()
 
   def showCollision(self):
@@ -190,9 +266,9 @@ class Level:
     glEnable(GL_TEXTURE_2D)
 
 __level__ = None
-def load(levelname):
+def load(levelname, scroller = None, tilesetclass = Tileset):
   global __level__
-  __level__ = Level(levelname)
+  __level__ = Level(levelname, scroller, tilesetclass)
   return __level__
 
 def getCurrent():

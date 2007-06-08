@@ -12,6 +12,7 @@ import level
 import sprite
 import enemy
 import font
+import scroll
 from time import sleep
 
 import damageArea
@@ -91,7 +92,6 @@ def rungame():
   timer.gameSpeed = 1
 
   lasthithp = 0
-
 
   sentence = ""
   sentencestrength = 1
@@ -200,6 +200,7 @@ def rungame():
       if en.state == 'dead':
         enemies.remove(en)
 
+    glPushMatrix()
     # do stuff
     lvl.draw()
     plr.draw()
@@ -208,8 +209,9 @@ def rungame():
     for p in pain:
       p.draw()
 
-    glPushMatrix()
+    glPopMatrix()
 
+    glPushMatrix()
     glLoadIdentity()
 
     glTranslatef(5, 5, 0)

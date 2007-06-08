@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from lib import level, font, main, timing, tinygui
+from lib import level, font, main, timing, tinygui, scroll
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
@@ -98,10 +98,10 @@ class LevelNameArea(tinygui.TextInputArea):
       
   def inputDone(self):
     try:
-      self.lvlarea.updateLevel(level.load(self.text))
+      self.lvlarea.updateLevel(level.load(self.text, None, level.TilesetView))
       tinygui.popup("level %s loaded" % (self.text))
     except IOError:
-      self.lvlarea.updateLevel(level.load(None))
+      self.lvlarea.updateLevel(level.load(None, None, level.TilesetView))
       self.lvlarea.lvl.levelname = self.text
       tinygui.popup("new level %s" % (self.text))
 
@@ -109,14 +109,12 @@ class TileSetNameArea(tinygui.TextInputArea):
   def __init__(self, parent):
     self.tsa = parent
     tinygui.TextInputArea.__init__(self,
-        self.tsa.lvlarea.lvl.tilemapname,
+        self.tsa.lvlarea.lvl.tileset.name,
         pygame.Rect(0, 0, 0, 0))
     self.setPosition()
-    print self.rect
 
   def setPosition(self):
-    self.rect = pygame.Rect(self.tsa.lvlarea.lvl.w * 32 + 32, self.tsa.rect.y - 32, self.tsa.rect.w, 32)
-    print self.rect
+    self.rect = pygame.Rect(self.tsa.lvlarea.rect.w + 32, self.tsa.rect.y - 32, self.tsa.rect.w, 32)
 
   def inputDone(self):
     try:
@@ -139,14 +137,27 @@ class TileSetArea(tinygui.Area):
       mpx = (ev.pos[0] - self.rect.x) / 32
       mpy = (ev.pos[1] - self.rect.y) / 32
 
-      if 0 <= mpx < self.lvlarea.lvl.ttw and 0 <= mpy < self.lvlarea.lvl.tth:
-        self.tilesel = mpx + mpy * self.lvlarea.lvl.ttw
+      if 0 <= mpx < self.lvlarea.lvl.tileset.ttw and 0 <= mpy < self.lvlarea.lvl.tileset.tth:
+        mpx += self.lvlarea.lvl.tileset.scroller.x
+        mpy += self.lvlarea.lvl.tileset.scroller.y
+        self.tilesel = mpx + mpy * self.lvlarea.lvl.tileset.ttw
         self.cursor.x = mpx
         self.cursor.y = mpy
 
+    elif ev.type == KEYDOWN:
+      md = {K_UP:    ( 0, -1),
+            K_DOWN:  ( 0,  1),
+            K_LEFT:  (-1,  0),
+            K_RIGHT: ( 1,  0),
+           }
+      if ev.key == K_g:
+        self.displayGrid = not self.displayGrid
+      elif ev.key in md:
+        self.lvlarea.lvl.tileset.scroller.rScroll(*md[ev.key])
+
   def setPosition(self):
-    self.rect = pygame.Rect(32, 32, self.lvlarea.lvl.ttw * 32, self.lvlarea.lvl.tth * 32)
-    self.rect.left = self.lvlarea.lvl.w * 32 + 64
+    self.rect = pygame.Rect(32, 32, self.lvlarea.rect.w, self.lvlarea.rect.h * 32)
+    self.rect.left = self.lvlarea.rect.w + 64
     try:
       self.tsna.setPosition()
     except:
@@ -155,9 +166,10 @@ class TileSetArea(tinygui.Area):
   def draw(self):
     glPushMatrix()
     glTranslatef(self.rect.x / 32, self.rect.y / 32, 0)
-    self.lvlarea.lvl.drawTileset()
-    self.lvlarea.lvl.showTilesetBorder()
-    self.lvlarea.lvl.showTilesetGrid()
+    self.lvlarea.lvl.tileset.draw()
+    self.lvlarea.lvl.tileset.showBorder()
+    self.lvlarea.lvl.tileset.showGrid()
+    self.lvlarea.lvl.tileset.scroller.scroll()
     self.cursor.draw()
     glPopMatrix()
 
@@ -166,8 +178,9 @@ class TileSetArea(tinygui.Area):
 
 class LevelArea(tinygui.Area):
   def __init__(self, levelname):
-    self.lvl = level.load(levelname)
-    self.rect = pygame.Rect(0, 0, self.lvl.w * 32, self.lvl.h * 32 + 32)
+    self.scroller = scroll.ScrollView(15, 30)
+    self.lvl = level.load(levelname, self.scroller, level.TilesetView)
+    self.rect = pygame.Rect(0, 0, self.scroller.w * 32, self.scroller.h * 32 + 32)
     self.lna = LevelNameArea(self)
     self.tsa = TileSetArea(self)
     self.cmd = CommandInputArea(self)
@@ -178,10 +191,13 @@ class LevelArea(tinygui.Area):
   def updateLevel(self, newlevel = None):
     if newlevel:
       self.lvl = newlevel
-    self.rect = pygame.Rect(0, 0, self.lvl.w * 32 + 32, self.lvl.h * 32 + 32)
+    self.lvl.setScroller(self.scroller)
+    self.scroller.h = min(self.lvl.h, 21)
+    self.scroller.w = min(self.lvl.w, 18)
+    self.rect = pygame.Rect(0, 0, self.scroller.w * 32 + 32, self.scroller.h * 32 + 32)
     self.lna.setPosition()
     self.tsa.setPosition()
-    self.tsa.tsna.setText(self.lvl.tilemapname)
+    self.tsa.tsna.setText(self.lvl.tileset.name)
     (self.cursor.x, self.cursor.y) = (0, 0)
 
   def handleEvent(self, ev):
@@ -189,24 +205,36 @@ class LevelArea(tinygui.Area):
       tpx = (ev.pos[0] - self.rect.x - 32) / 32
       tpy = (ev.pos[1] - self.rect.y - 32) / 32
 
-      if 0 <= tpx < self.lvl.w and 0 <= tpy < self.lvl.h:
+      if 0 <= tpx < self.scroller.areaw and 0 <= tpy < self.scroller.areah:
+        tpx += self.scroller.x
+        tpy += self.scroller.y
         self.lvl.level[tpy][tpx] = self.tsa.tilesel
         self.cursor.x = tpx
         self.cursor.y = tpy
     elif ev.type == KEYDOWN:
+      md = {K_UP:    ( 0, -1),
+            K_DOWN:  ( 0,  1),
+            K_LEFT:  (-1,  0),
+            K_RIGHT: ( 1,  0),
+           }
       if ev.key == K_g:
         self.displayGrid = not self.displayGrid
+      elif ev.key in md:
+        self.scroller.rScroll(*md[ev.key])
 
   def draw(self):
     glPushMatrix()
     glTranslatef(1 + self.rect.x / 32, 1 + self.rect.y / 32, 0)
 
+    glPushMatrix()
+    self.scroller.scroll()
     self.lvl.draw()
+    self.cursor.draw()
+    glPopMatrix()
+
     self.lvl.showBorder()
     if self.displayGrid:
       self.lvl.showGrid()
-
-    self.cursor.draw()
 
     glPopMatrix()
 
