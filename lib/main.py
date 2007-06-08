@@ -46,6 +46,7 @@ def init():
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
   glEnable(GL_LINE_SMOOTH)
   glEnable(GL_TEXTURE_2D)
+  glClearColor(0.8,0.9,1.0,1.0)
 
 def rungame():
   # init all stuff
