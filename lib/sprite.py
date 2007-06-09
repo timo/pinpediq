@@ -68,6 +68,81 @@ class Sprite:
 
     return False
 
+  def pointCollides(self, x, y, vx, vy):
+    col = self.tileset.collision[self.level[y][x]]
+    rx = x % 1
+    ry = y % 1
+    if col == 0:
+      return False
+
+    elif col == 1:
+      return True
+
+    elif col == 2 or (col == 6 and vy > 0): # / slope with solid part at bottom
+      return rx >= 1 - ry
+    elif col == 3 or (col == 7 and vy > 0): # \ slope
+      return rx >= ry
+
+    elif col == 4: # / slope with solid at top
+      return rx <= 1 - ry
+    elif col == 5: # \ slope
+      return rx <= ry
+
+    elif col in [8, 9]: # platforms that only blocks from above
+      return vy > 0
+
+    elif col == 10 or (col == 26 and vy >= 0):
+      return ry <= 1 - 0.5 * rx
+    elif col == 11 or (col == 27 and vy >= 0):
+      return ry <= 0.5 - 0.5 * rx
+
+    elif col == 12 or (col == 28 and vy >= 0):
+      return ry >= 0.5 * rx
+    elif col == 13 or (col == 29 and vy >= 0):
+      return ry >= 0.5 + 0.5 * rx
+
+    elif col == 14 or (col == 30 and vy >= 0):
+      return ry >= 1 - 2 * rx
+    elif col == 15 or (col == 31 and vy >= 0):
+      return ry >= 2 - 2 * rx
+
+    elif col == 16 or (col == 32 and vy >= 0):
+      return ry >= -1 + 2 * rx
+    elif col == 17 or (col == 33 and vy >= 0):
+      return ry >= 2 * rx
+    
+    elif col == 18:
+      return ry >= 1 - 0.5 * rx
+    elif col == 19:
+      return ry >= 0.5 - 0.5 * rx
+
+    elif col == 20:
+      return ry <= 0.5 * rx
+    elif col == 21:
+      return ry <= 0.5 + 0.5 * rx
+
+    elif col == 22:
+      return ry <= 1 - 2 * rx
+    elif col == 23:
+      return ry <= 2 - 2 * rx
+
+    elif col == 24:
+      return ry <= -1 + 2 * rx
+    elif col == 25:
+      return ry <= 2 * rx
+
+    elif col == 34:
+      return rx <= 0.5
+    elif col == 35:
+      return rx >= 0.5
+    elif col == 36:
+      return ry <= 0.5
+    elif col == 37:
+      return ry >= 0.5
+
+    else:
+      return True
+
   def checkHorLine(self, x, y):
     tilx = int(x)
     tily = int(y)
