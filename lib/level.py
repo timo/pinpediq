@@ -19,7 +19,7 @@ class Tileset:
       self.ttw, self.tth = [int(a) for a in cf.readline().strip().split(",")]
       self.collision = []
       for l in cf.readlines():
-        self.collision.extend([int(lp) for lp in l.split(" ")])
+        self.collision.extend([int(lp) for lp in l.split(" ") if lp])
     else:
       self.ttw, self.tth = 4, 4
       self.collisions = [0] * 16

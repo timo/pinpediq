@@ -84,7 +84,7 @@ class Sprite:
         return True
       if self.lev.tileset.collision[self.lev.level[tily][tx]] == 1:
         return True
-      elif self.lev.tileset.collision[self.lev.level[tily][tx]] in [4, 5] and self.vy > 0 and tily - self.y >= self.h:
+      elif self.lev.tileset.collision[self.lev.level[tily][tx]] in [8, 9] and self.vy > 0 and tily - self.y >= self.h:
         return True
 
     return False

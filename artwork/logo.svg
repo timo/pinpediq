@@ -15,38 +15,14 @@
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
    version="1.0"
-   sodipodi:docbase="/home/rageon/pinpediq/artwork"
+   sodipodi:docbase="/home/timonator/coding/pinpediq/artwork"
    sodipodi:docname="logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/timonator/coding/pinpediq/artwork/logo.png"
+   inkscape:export-filename="/home/timonator/public_html/logo.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
      id="defs2404">
-    <filter
-       id="filter3534"
-       height="1.3903475"
-       y="-0.19517377"
-       width="1.3777556"
-       x="-0.18887784"
-       inkscape:collect="always">
-      <feGaussianBlur
-         id="feGaussianBlur3536"
-         stdDeviation="3.1478897"
-         inkscape:collect="always" />
-    </filter>
-    <filter
-       id="filter3530"
-       height="1.3903475"
-       y="-0.19517377"
-       width="1.3777556"
-       x="-0.18887784"
-       inkscape:collect="always">
-      <feGaussianBlur
-         id="feGaussianBlur3532"
-         stdDeviation="3.1478897"
-         inkscape:collect="always" />
-    </filter>
     <linearGradient
        id="linearGradient4616">
       <stop
@@ -122,7 +98,7 @@
        xlink:href="#linearGradient4616"
        id="radialGradient2959"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.146743,0,0,0.872035,-79.6125,-718.62391)"
+       gradientTransform="matrix(1.146743,0,0,0.872035,-75.785006,-692.78833)"
        cx="305.04718"
        cy="628.09326"
        fx="305.04718"
@@ -133,23 +109,43 @@
        xlink:href="#linearGradient5384"
        id="radialGradient2961"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.150955,0,0,0.868844,-79.6125,-718.62391)"
+       gradientTransform="matrix(1.150955,0,0,0.868844,-75.785006,-692.78833)"
        cx="310.79675"
        cy="648.40857"
        fx="314.01593"
        fy="649.84192"
        r="122.1133" />
     <filter
-       id="filter3554"
-       height="1.3295134"
-       y="-0.16475672"
-       width="1.2658973"
-       x="-0.13294867"
-       inkscape:collect="always">
+       inkscape:collect="always"
+       x="-0.32047883"
+       width="1.6409577"
+       y="-0.33116146"
+       height="1.6623229"
+       id="filter4220">
       <feGaussianBlur
-         id="feGaussianBlur3556"
-         stdDeviation="7.4868215"
-         inkscape:collect="always" />
+         inkscape:collect="always"
+         stdDeviation="4.6258364"
+         id="feGaussianBlur4222" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       x="-0.30617295"
+       width="1.6123459"
+       y="-0.31637872"
+       height="1.6327574"
+       id="filter4224">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="4.6258364"
+         id="feGaussianBlur4226" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4228">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.4852164"
+         id="feGaussianBlur4230" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -159,9 +155,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
+     inkscape:zoom="1"
      inkscape:cx="244.81838"
-     inkscape:cy="68.950413"
+     inkscape:cy="48.950413"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      width="500px"
@@ -174,7 +170,7 @@
      inkscape:window-width="1152"
      inkscape:window-height="734"
      inkscape:window-x="0"
-     inkscape:window-y="60" />
+     inkscape:window-y="58" />
   <metadata
      id="metadata2407">
     <rdf:RDF>
@@ -200,10 +196,10 @@
          id="tspan9228"
          x="139.59975"
          y="132.20799"
-         style="font-size:30px;font-family:URW Gothic L">PinpediQuest</tspan></text>
+         style="font-size:30px;font-family:Dragonwick">PinpediQuest</tspan></text>
     <g
        id="g2902"
-       transform="matrix(0.5225351,0,0,0.5225351,281.88748,173.15921)">
+       transform="matrix(0.5225351,0,0,0.5225351,279.88748,159.65921)">
       <path
          sodipodi:nodetypes="cccc"
          id="path1362"
@@ -502,11 +498,11 @@
     <path
        transform="matrix(0.947815,0,0,1.1677616,-47.628723,-129.74729)"
        id="path5187"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.80207872;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:3.80207874, 3.80207874;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3554)"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.80207872;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:3.80207874, 3.80207874;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4228)"
        d="M 190.94428,174.1029 C 190.94428,202.99546 164.72129,226.44448 132.41084,226.44448 C 100.10038,226.44448 58.015363,222.59679 67.038439,197.27388 C 103.76776,164.43085 91.333499,135.29978 129.84347,125.89901 C 161.95237,122.19278 190.94428,145.21035 190.94428,174.1029 z " />
     <path
        id="path5189"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5.17503166;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:5.17503179, 5.17503179;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3534)"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5.17503166;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:5.17503179, 5.17503179;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4224)"
        transform="matrix(0.5560228,0,0,0.5745569,-5.3822873,-230.82732)"
        d="M 281,518.09448 C 281,526.37875 274.06041,533.09448 265.5,533.09448 C 256.93959,533.09448 250,526.37875 250,518.09448 C 250,509.81021 256.93959,503.09448 265.5,503.09448 C 274.06041,503.09448 281,509.81021 281,518.09448 z " />
     <path
@@ -591,7 +587,7 @@
     </g>
     <path
        id="path5195"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.58271408;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:7.16542824, 3.58271413;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3530)"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.58271408;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:7.16542824, 3.58271413;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4220)"
        transform="matrix(0.5560228,0,0,0.5745569,-71.25109,-191.17393)"
        d="M 281,518.09448 C 281,526.37875 274.06041,533.09448 265.5,533.09448 C 256.93959,533.09448 250,526.37875 250,518.09448 C 250,509.81021 256.93959,503.09448 265.5,503.09448 C 274.06041,503.09448 281,509.81021 281,518.09448 z " />
   </g>
