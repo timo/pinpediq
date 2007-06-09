@@ -118,7 +118,7 @@ class TileSetNameArea(tinygui.TextInputArea):
 
   def inputDone(self):
     try:
-      self.tsa.lvlarea.lvl.loadTileset(self.text)
+      self.tsa.lvlarea.lvl.tileset = level.TilesetView(self.text, self.tsa.lvlarea.lvl.tileset.scroller)
       tinygui.popup("tileset %s loaded" % (self.text))
     except (IOError, pygame.error):
       tinygui.popup("tileset %s does not exist" % (self.text))

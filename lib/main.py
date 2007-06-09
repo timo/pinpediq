@@ -57,8 +57,8 @@ def rungame():
   timer.startTiming()
 
   lvl = level.load("rageons")
-  lvl.scroller.w = screensize[0] / 32
-  lvl.scroller.h = screensize[1] / 32
+  lvl.scroller.w = screensize[0] / 32 + 1
+  lvl.scroller.h = screensize[1] / 32 + 1
 
   plr = sprite.Sprite("player")
   plr.x = 6

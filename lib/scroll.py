@@ -25,7 +25,7 @@ class ScrollView:
     glTranslatef(-self.x, -self.y, 0)
 
   def levelScroll(self):
-    return (int(x) for x in (self.x, self.y, self.w + 1, self.h + 1))
+    return (int(x) for x in (self.x, self.y, self.w, self.h))
   
   def centerOn(self, x, y, speed = 1):
     self.rScroll(speed * (x - self.x - self.w * 0.5), speed * (y - self.y - self.h * 0.5))
