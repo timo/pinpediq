@@ -192,8 +192,8 @@ class Level:
     self.tileset.bind()
     glEnable(GL_TEXTURE_2D)
     glColor4f(1.0, 1.0, 1.0, 1.0)
-    for x in range(  sx, sx + sw):
-      for y in range(sy, sy + sh):
+    for x in range(   max(0, sx), min(self.w, sx + sw)):
+      for y in range( max(0, sy), min(self.h, sy + sh)):
         glPushMatrix()
         glTranslatef(x, y, 0)
         self.quad(self.level[y][x] % self.tileset.ttw, self.level[y][x] / self.tileset.ttw, self.tileset.ttw, self.tileset.tth)

@@ -25,7 +25,10 @@ class ScrollView:
     glTranslatef(-self.x, -self.y, 0)
 
   def levelScroll(self):
-    return (int(x) for x in (self.x, self.y, self.w, self.h))
+    return (int(x) for x in (self.x, self.y, self.w + 1, self.h + 1))
   
+  def centerOn(self, x, y, speed = 1):
+    self.rScroll(speed * (x - self.x - self.w * 0.5), speed * (y - self.y - self.h * 0.5))
+
   def __repr__(self):
     return "ScrollView: viewing part (%s, %s, %s, %s) of area (0, 0, %s, %s)" % (self.x, self.y, self.w, self.h, self.areaw, self.areah)

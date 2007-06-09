@@ -57,6 +57,8 @@ def rungame():
   timer.startTiming()
 
   lvl = level.load("rageons")
+  lvl.scroller.w = screensize[0] / 32
+  lvl.scroller.h = screensize[1] / 32
 
   plr = sprite.Sprite("player")
   plr.x = 6
@@ -203,15 +205,21 @@ def rungame():
       if en.state == 'dead':
         enemies.remove(en)
 
+    lvl.scroller.centerOn(plr.x, plr.y, timer.curspd / 2)
+
     glPushMatrix()
     # do stuff
+    lvl.scroller.scroll()
     lvl.draw()
+    glPushMatrix()
+    #lvl.scroller.scroll()
     plr.draw()
     for en in enemies:
       en.draw()
     for p in pain:
       p.draw()
 
+    glPopMatrix()
     glPopMatrix()
 
     glPushMatrix()
