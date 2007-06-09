@@ -56,7 +56,7 @@ def rungame():
   running = True
   timer.startTiming()
 
-  lvl = level.load("rageons")
+  lvl = level.load("rageons3")
   lvl.scroller.w = screensize[0] / 32 + 1
   lvl.scroller.h = screensize[1] / 32 + 1
 
