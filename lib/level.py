@@ -106,6 +106,8 @@ class DummyTileset(Tileset):
     self.name = "__dummy__"
     self.ttw = 4
     self.tth = 4
+    self.w = self.img.w
+    self.h = self.img.h
 
 class DummyTilesetView(TilesetView):
   def __init__(self):
