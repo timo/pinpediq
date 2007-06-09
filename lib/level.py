@@ -24,16 +24,13 @@ class Tileset:
       self.ttw, self.tth = 4, 4
       self.collisions = [0] * 16
 
+    self.scroller = scroll.ScrollView(10, 10)
+    self.scroller.changeArea(self.ttw, self.tth)
+    self.scroller.scrollTo(0, 0)
+
   def bind(self):
     self.img.bind()
 
-class TilesetView(Tileset):
-  def __init__(self, name, scroller = None):
-    Tileset.__init__(self, name)
-    self.scroller = scroller or scroll.ScrollView(10, 10)
-    self.scroller.changeArea(self.ttw, self.tth)
-    self.scroller.scrollTo(0, 0)
-  
   def quad(self, col, row):
     # this describes the position of the upper left corner
     w = 1.0 / self.ttw
@@ -99,24 +96,10 @@ class TilesetView(Tileset):
       glVertex2f(self.scroller.w, y)
     glEnd()
 
-class DummyTileset(Tileset):
-  def __init__(self):
-    self.collision = []
-    self.img = res.getTexture("__dummy__")
-    self.name = "__dummy__"
-    self.ttw = 4
-    self.tth = 4
-    self.w = self.img.w
-    self.h = self.img.h
-
-class DummyTilesetView(TilesetView):
-  def __init__(self):
-    TilesetView.__init__("__dummy__", scroll.ScrollView(4, 4))
-
 class Level:
-  def __init__(self, levelname = None, scroller = None, tilesetclass=Tileset):
+  def __init__(self, levelname = None, scroller = None):
     if levelname:
-      self.load(levelname, tilesetclass)
+      self.load(levelname)
     else:
       (self.w, self.h) = (4, 4)
       self.level = [[0, 1, 2, 3],
@@ -124,7 +107,7 @@ class Level:
                     [0, 1, 2, 3],
                     [3, 2, 1, 0]]
       
-      self.tileset = DummyTileset()
+      self.tileset = Tileset()
 
     self.setScroller(scroller or scroll.ScrollView(self.w, self.h))
 
@@ -133,7 +116,7 @@ class Level:
     self.scroller.changeArea(self.w, self.h)
     self.scroller.scrollTo(0, 0)
 
-  def load(self, levelname, tilesetclass = Tileset):
+  def load(self, levelname):
     self.levelname = levelname
 
     lf = open("data/levels/%s.pql" % levelname, "r")
@@ -147,7 +130,7 @@ class Level:
 
     lf.close()
 
-    self.tileset = tilesetclass(self.tilesetname)
+    self.tileset = Tileset(self.tilesetname)
 
   def save(self):
     lf = open("data/levels/%s.pql" % self.levelname, "w")
@@ -268,9 +251,9 @@ class Level:
     glEnable(GL_TEXTURE_2D)
 
 __level__ = None
-def load(levelname, scroller = None, tilesetclass = Tileset):
+def load(levelname, scroller = None):
   global __level__
-  __level__ = Level(levelname, scroller, tilesetclass)
+  __level__ = Level(levelname, scroller)
   return __level__
 
 def getCurrent():

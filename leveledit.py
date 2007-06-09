@@ -98,10 +98,10 @@ class LevelNameArea(tinygui.TextInputArea):
       
   def inputDone(self):
     try:
-      self.lvlarea.updateLevel(level.load(self.text, None, level.TilesetView))
+      self.lvlarea.updateLevel(level.load(self.text, None))
       tinygui.popup("level %s loaded" % (self.text))
     except IOError:
-      self.lvlarea.updateLevel(level.load(None, None, level.TilesetView))
+      self.lvlarea.updateLevel(level.load(None, None))
       self.lvlarea.lvl.levelname = self.text
       tinygui.popup("new level %s" % (self.text))
 
@@ -118,7 +118,7 @@ class TileSetNameArea(tinygui.TextInputArea):
 
   def inputDone(self):
     try:
-      self.tsa.lvlarea.lvl.tileset = level.TilesetView(self.text, self.tsa.lvlarea.lvl.tileset.scroller)
+      self.tsa.lvlarea.lvl.tileset = level.Tileset(self.text)
       tinygui.popup("tileset %s loaded" % (self.text))
     except (IOError, pygame.error):
       tinygui.popup("tileset %s does not exist" % (self.text))
@@ -179,7 +179,7 @@ class TileSetArea(tinygui.Area):
 class LevelArea(tinygui.Area):
   def __init__(self, levelname):
     self.scroller = scroll.ScrollView(15, 30)
-    self.lvl = level.load(levelname, self.scroller, level.TilesetView)
+    self.lvl = level.load(levelname, self.scroller)
     self.rect = pygame.Rect(0, 0, self.scroller.w * 32, self.scroller.h * 32 + 32)
     self.lna = LevelNameArea(self)
     self.tsa = TileSetArea(self)
