@@ -72,10 +72,10 @@ class Sprite:
     col = self.tileset.collision[self.level[y][x]]
     rx = x % 1
     ry = y % 1
-    if col == 0:
+    if col == 0:   # air
       return False
 
-    elif col == 1:
+    elif col == 1: # wall
       return True
 
     elif col == 2 or (col == 6 and vy > 0): # / slope with solid part at bottom
@@ -91,53 +91,53 @@ class Sprite:
     elif col in [8, 9]: # platforms that only blocks from above
       return vy > 0
 
-    elif col == 10 or (col == 26 and vy >= 0):
+    elif col == 10 or (col == 26 and vy >= 0): # shallow slope / left half bottom-solid or fall-block
       return ry <= 1 - 0.5 * rx
-    elif col == 11 or (col == 27 and vy >= 0):
+    elif col == 11 or (col == 27 and vy >= 0): # shallow slope / right half bottom-solid or fall-block
       return ry <= 0.5 - 0.5 * rx
 
-    elif col == 12 or (col == 28 and vy >= 0):
+    elif col == 12 or (col == 28 and vy >= 0): # shallow slope \ left half
       return ry >= 0.5 * rx
-    elif col == 13 or (col == 29 and vy >= 0):
+    elif col == 13 or (col == 29 and vy >= 0): # shallow slope \ right half
       return ry >= 0.5 + 0.5 * rx
 
-    elif col == 14 or (col == 30 and vy >= 0):
+    elif col == 14 or (col == 30 and vy >= 0): # steep slope / lower half
       return ry >= 1 - 2 * rx
-    elif col == 15 or (col == 31 and vy >= 0):
+    elif col == 15 or (col == 31 and vy >= 0): # steep slope / upper half
       return ry >= 2 - 2 * rx
 
-    elif col == 16 or (col == 32 and vy >= 0):
+    elif col == 16 or (col == 32 and vy >= 0): # steep slope \ lower
       return ry >= -1 + 2 * rx
-    elif col == 17 or (col == 33 and vy >= 0):
+    elif col == 17 or (col == 33 and vy >= 0): # steep slope \ upper
       return ry >= 2 * rx
     
-    elif col == 18:
+    elif col == 18:  #  shallow slope / left half top-solid
       return ry >= 1 - 0.5 * rx
-    elif col == 19:
+    elif col == 19:  #  shallow slope / right half
       return ry >= 0.5 - 0.5 * rx
 
-    elif col == 20:
+    elif col == 20:  #  shallow slope \ l
       return ry <= 0.5 * rx
-    elif col == 21:
+    elif col == 21:  #  shallow slope \ r
       return ry <= 0.5 + 0.5 * rx
 
-    elif col == 22:
+    elif col == 22:  #  steep / l
       return ry <= 1 - 2 * rx
-    elif col == 23:
+    elif col == 23:  #  steep / u
       return ry <= 2 - 2 * rx
 
-    elif col == 24:
+    elif col == 24:  #  steep \ l
       return ry <= -1 + 2 * rx
-    elif col == 25:
+    elif col == 25:  #  steep \ u
       return ry <= 2 * rx
 
-    elif col == 34:
+    elif col == 34:  # left half
       return rx <= 0.5
-    elif col == 35:
+    elif col == 35:  # right halg
       return rx >= 0.5
-    elif col == 36:
+    elif col == 36:  # upper half
       return ry <= 0.5
-    elif col == 37:
+    elif col == 37:  # lower half
       return ry >= 0.5
 
     else:
