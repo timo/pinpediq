@@ -20,22 +20,52 @@
 
    1: wall, fully colliding
 
-   2: slope /
+   2: slope /    those two have the solid part at the bottom
    3: slope \
 
-   4: platform, blocks only from above. player can fall through
-   5: platform, blocks only from above. player can't fall through
+   4: slope /    those two have the solid part at the top
+   5: slope \
 
-   6: shallow slope / left part
-   7: shallow slope / right part
-   8: shallow slope \ left part
-   9: shallow slope \ right part
+   6: slope /    blocks only from above
+   7: slope \    blocks only from above
 
-  10: steep slope / lower part
-  11: steep slope / upper part
-  12: steep slope \ lower part
-  13: steep slope \ upper part
+   8: platform, blocks only from above. player can fall through
+   9: platform, blocks only from above. player can't fall through
 
+  10: shallow slope / left part      \
+  11: shallow slope / right part     | those tiles have the solid part at the
+  12: shallow slope \ left part      | bottom
+  13: shallow slope \ right part     |
+                                     |
+  14: steep slope / lower part       |
+  15: steep slope / upper part       |
+  16: steep slope \ lower part       |
+  17: steep slope \ upper part       /
+
+  18: shallow slope / left part      \
+  19: shallow slope / right part     | those tiles have the solid part at the
+  20: shallow slope \ left part      | top
+  21: shallow slope \ right part     |
+                                     |
+  22: steep slope / lower part       |
+  23: steep slope / upper part       |
+  24: steep slope \ lower part       |
+  25: steep slope \ upper part       /
+
+  26: shallow slope / left part      \
+  27: shallow slope / right part     | those tiles have no solid part
+  28: shallow slope \ left part      |
+  29: shallow slope \ right part     |
+                                     |
+  30: steep slope / lower part       |
+  31: steep slope / upper part       |
+  32: steep slope \ lower part       |
+  33: steep slope \ upper part       /
+
+  34: wall, only left half blocking
+  35: wall, only right half blocking
+  36: wall, only upper half blocking
+  37: wall, only lower half blocking
 
 example: a 4*4 tileset
 4, 4
