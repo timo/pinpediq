@@ -64,15 +64,21 @@ class Sprite:
     elif col == 1: # wall
       return True
 
-    elif col == 2 or (col == 6 and vy > 0): # / slope with solid part at bottom
+    elif col == 2: # / slope with solid part at bottom
       return ry >= 1 - rx
-    elif col == 3 or (col == 7 and vy > 0): # \ slope
+    elif col == 3: # \ slope
       return ry >= rx
 
     elif col == 4: # / slope with solid at top
       return ry <= 1 - rx
     elif col == 5: # \ slope
       return ry <= rx
+
+    elif col == 6:
+      return (ry >= 1 -rx and vy >= 0)
+
+    elif col == 7:
+      return (ry >= rx and vy >= 0)
 
     elif col in [8, 9]: # platforms that only blocks from above
       return vy > 0
