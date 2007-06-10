@@ -76,7 +76,6 @@ class Sprite:
 
     elif col == 6:
       return (ry >= 1 -rx and vy >= 0)
-
     elif col == 7:
       return (ry >= rx and vy >= 0)
 
@@ -123,6 +122,26 @@ class Sprite:
     elif col == 25:  #  steep \ u
       return ry <= 2 * rx
 
+    elif col == 26:
+      return ry >= 1 - 0.5 * rx and vy >= 0
+    elif col == 27 :
+      return ry >= 0.5 - 0.5 * rx and vy >= 0
+
+    elif col == 28:
+      return ry >= 0.5 * rx and vy >= 0
+    elif col == 29:
+      return ry >= 0.5 + 0.5 * rx and vy >= 0
+
+    elif col == 30:
+      return ry >= 1 - 2 * rx and vy >= 0
+    elif col == 31:
+      return ry >= 2 - 2 * rx and vy >= 0
+
+    elif col == 32:
+      return ry >= -1 + 2 * rx and vy >= 0
+    elif col == 33:
+      return ry >= 2 * rx and vy >= 0
+
     elif col == 34:  # left half
       return rx <= 0.5
     elif col == 35:  # right halg
@@ -165,7 +184,7 @@ class Sprite:
       self.vy = 0
       self.hitTop()
     elif hit and vy > 0:
-      self.vy = -0.981
+      self.vy = -1
       self.hitBottom()
 
   def hitLeft(self):   pass
