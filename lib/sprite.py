@@ -3,6 +3,74 @@ from OpenGL.GL import *
 import level
 from timing import timer
 
+class Tilecollider:
+  def __init__(self, m, c, solidtype):
+    """m and c define a linear function of the form:
+
+    f(x) = m * x + c
+
+    solidtype is -1, if the part above the line is blocking
+    and 1, if the part below it is blocking.
+    if it's a jump-through tile, it's 0"""
+    self.m = m
+    self.c = c
+    self.st = solidtype
+
+  def collide(self, x, y, mx, my):
+    pass # magic here
+
+tiletypes = [\
+  Tilecollider(0,  0, -1),  # air, never block
+  Tilecollider(0,  0,  1),   # wall, always block
+
+  Tilecollider(-1, 1,  1),   # slope /
+  Tilecollider(1,  0,  1),   # slope \
+  
+  Tilecollider(-1, 1, -1),   # /
+  Tilecollider(1,  0, -1),   # \
+
+  Tilecollider(-1, 1,  0),   # /
+  Tilecollider(1,  0,  0),   # \
+
+  Tilecollider(0, 0, 0),
+  Tilecollider(0, 0, 0),
+
+  Tilecollider(-0.5, 1,   1),
+  Tilecollider(-0.5, 0.5, 1),
+  Tilecollider( 0.5, 0,   1),
+  Tilecollider( 0.5, 0.5, 1),
+
+  Tilecollider(-2,  1, 1),
+  Tilecollider(-2,  2, 1), # 15
+  Tilecollider( 2, -1, 1),
+  Tilecollider( 2,  0, 1),
+
+  Tilecollider(-0.5, 1,   -1),
+  Tilecollider(-0.5, 0.5, -1),
+  Tilecollider( 0.5, 0  , -1),
+  Tilecollider( 0.5, 0.5, -1),
+
+  Tilecollider(-2, 1, -1),
+  Tilecollider(-2, 2, -1),
+  Tilecollider(2, -1, -1),
+  Tilecollider(2, 0,  -1),
+
+  Tilecollider(-0.5, 1,   0),
+  Tilecollider(-0.5, 0.5, 0),
+  Tilecollider( 0.5, 0  , 0),
+  Tilecollider( 0.5, 0.5, 0),
+
+  Tilecollider(-2, 1, 0),
+  Tilecollider(-2, 2, 0),
+  Tilecollider(2, -1, 0),
+  Tilecollider(2, 0,  0),
+
+  Tilecollider(-5000, 2500.5, -1),
+  Tilecollider(-5000, 2500.5, 1),
+  Tilecollider(0, 0.5, -1),
+  Tilecollider(0, 0.5, 1),
+]
+
 class Sprite:
   def __init__(self, imagename):
     self.img = res.getTexture(imagename)
