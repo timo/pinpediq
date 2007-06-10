@@ -17,7 +17,16 @@ class Tilecollider:
     self.st = solidtype
 
   def collide(self, x, y, mx, my):
-    pass # magic here
+    rx = x % 1
+    ry = y % 1
+
+    if (self.st == 0 and my >= 0) or self.st == 1:
+      return rx >= self.m * rx + self.c
+    else:
+      return rx <= self.m * rx + self.c
+
+  def putOutside(self, x, y, mx, my):
+    pass # more magic
 
 tiletypes = [\
   Tilecollider(0,  0, -1),  # air, never block
