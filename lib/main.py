@@ -84,15 +84,15 @@ def rungame():
   pain = []
   ppain = []
 
-  for i in range(5):
-    ne = enemy.enemy(random.choice(possibleenemys))
-    (ne.x, ne.y) = random.choice(possiblepositions)
-    #possiblepositions.remove((ne.x, ne.y))
-    (ne.w, ne.h) = (1, 1)
-    ne.vx = 0.5
-    enemies.append(ne)
-    ppain.append(damageArea.RectDamage(ne.x, ne.y, ne.w, ne.h, ne.vx, ne.vy, -1, 10))
-    ne.damager = ppain[-1] 
+  #for i in range(5):
+  #  ne = enemy.enemy(random.choice(possibleenemys))
+  #  (ne.x, ne.y) = random.choice(possiblepositions)
+  #  #possiblepositions.remove((ne.x, ne.y))
+  #  (ne.w, ne.h) = (1, 1)
+  #  ne.vx = 0.5
+  #  enemies.append(ne)
+  #  ppain.append(damageArea.RectDamage(ne.x, ne.y, ne.w, ne.h, ne.vx, ne.vy, -1, 10))
+  #  ne.damager = ppain[-1] 
 
   timer.gameSpeed = 1
 

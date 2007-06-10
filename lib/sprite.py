@@ -21,19 +21,23 @@ class Tilecollider:
     ry = y % 1
 
     if (self.st == 0 and my >= 0) or self.st == 1:
-      return rx >= self.m * rx + self.c
+      return ry >= self.m * rx + self.c
+    elif self.st == 0 and my < 0:
+      return False
+    elif self.st == -1 and self.m == 0 and self.c == 0:
+      return False
     else:
-      return rx <= self.m * rx + self.c
+      return ry <= self.m * rx + self.c
 
   def putOutside(self, x, y, mx, my):
     if self.st != 0:
-        y += self.st * 1    
+      my = self.st    
     else: # still needs some magic
-        y += 1
+      my = -1  
     return [x, y, mx, my]
 
 tiletypes = [\
-  Tilecollider(0,  0, -1),  # air, never block
+  Tilecollider(0,  0,  -1),  # air, never block
   Tilecollider(0,  0,  1),   # wall, always block
 
   Tilecollider(-1, 1,  1),   # slope /
@@ -109,8 +113,8 @@ class Sprite:
     if hit:
       pass
     else:
-      self.x = self.vx * timer.curspd
-      self.y = self.vy * timer.curspd
+      self.x += self.vx * timer.curspd
+      self.y += self.vy * timer.curspd
 
     if self.nextstate != -1:
       self.nextstate -= timer.curspd
@@ -137,15 +141,15 @@ class Sprite:
 
   def checkCollision(self, vx, vy):
     
-    x = self.x
-    y = self.y
+    x = self.x + self.w / 2
+    y = self.y + self.h / 2
     col = self.lev.tileset.collision[self.lev.level[int(x)][int(y)]]
     if tiletypes[col].collide(x, y, vx, vy):
       newpos = tiletypes[col].putOutside(x, y, vx, vy)
-      self.x = x
-      self.y = y
-      self.vx = vx
-      self.vy = vy
+      self.x = newpos[0]
+      self.y = newpos[1]
+      self.vx = newpos[2]
+      self.vy = newpos[3]
       return True
     else:
       return False
