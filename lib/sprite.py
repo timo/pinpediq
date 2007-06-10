@@ -26,7 +26,11 @@ class Tilecollider:
       return rx <= self.m * rx + self.c
 
   def putOutside(self, x, y, mx, my):
-    pass # more magic
+    if self.st != 0:
+        y += self.st * 1    
+    else: # still needs some magic
+        y += 1
+    return [x, y, mx, my]
 
 tiletypes = [\
   Tilecollider(0,  0, -1),  # air, never block
@@ -100,7 +104,13 @@ class Sprite:
 
   def move(self):
     self.vy += 5 * timer.curspd
-    self.checkCollision(self.vx * timer.curspd, self.vy * timer.curspd)
+    hit = self.checkCollision(self.vx * timer.curspd, self.vy * timer.curspd)
+
+    if hit:
+      pass
+    else:
+      self.x = self.vx * timer.curspd
+      self.y = self.vy * timer.curspd
 
     if self.nextstate != -1:
       self.nextstate -= timer.curspd
@@ -126,7 +136,19 @@ class Sprite:
     glEnable(GL_TEXTURE_2D)
 
   def checkCollision(self, vx, vy):
-    pass # magic here as well
+    
+    x = self.x
+    y = self.y
+    col = self.lev.tileset.collision[self.lev.level[int(x)][int(y)]]
+    if tiletypes[col].collide(x, y, vx, vy):
+      newpos = tiletypes[col].putOutside(x, y, vx, vy)
+      self.x = x
+      self.y = y
+      self.vx = vx
+      self.vy = vy
+      return True
+    else:
+      return False
 
   def hitLeft(self):   pass
   def hitRight(self):  pass
