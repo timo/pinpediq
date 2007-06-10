@@ -137,9 +137,9 @@ class Sprite:
     pxy = [self.x + vx, self.y + vy]
 
     l = math.sqrt(vx ** 2 + vy ** 2)
-    pxy1 = [x / l for x in (vx, vy)]
+    pxy1 = [vx / l, vy / l]
 
-    while self.pointCollides(*(pxy + [vx, vy])) and (pxy[0] < 0) == (vx < 0) and (pxy[1] < 0) == (vy < 0):
+    while self.pointCollides(*(pxy + [vx, vy])) and (pxy[0] - self.x < 0) == (vx < 0) and (pxy[1] - self.y < 0) == (vy < 0):
       pxy = [pxy[0] - pxy1[0] * 0.1, pxy[1] - pxy1[1] * 0.1]
       hit = True
 
