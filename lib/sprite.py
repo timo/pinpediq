@@ -65,22 +65,22 @@ class Sprite:
       return True
 
     elif col == 2 or (col == 6 and vy > 0): # / slope with solid part at bottom
-      return rx >= 1 - ry
+      return ry >= 1 - rx
     elif col == 3 or (col == 7 and vy > 0): # \ slope
-      return rx >= ry
+      return ry >= rx
 
     elif col == 4: # / slope with solid at top
-      return rx <= 1 - ry
+      return ry <= 1 - rx
     elif col == 5: # \ slope
-      return rx <= ry
+      return ry <= rx
 
     elif col in [8, 9]: # platforms that only blocks from above
       return vy > 0
 
     elif col == 10 or (col == 26 and vy >= 0): # shallow slope / left half bottom-solid or fall-block
-      return ry <= 1 - 0.5 * rx
+      return ry >= 1 - 0.5 * rx
     elif col == 11 or (col == 27 and vy >= 0): # shallow slope / right half bottom-solid or fall-block
-      return ry <= 0.5 - 0.5 * rx
+      return ry >= 0.5 - 0.5 * rx
 
     elif col == 12 or (col == 28 and vy >= 0): # shallow slope \ left half
       return ry >= 0.5 * rx
@@ -98,9 +98,9 @@ class Sprite:
       return ry >= 2 * rx
     
     elif col == 18:  #  shallow slope / left half top-solid
-      return ry >= 1 - 0.5 * rx
+      return ry <= 1 - 0.5 * rx
     elif col == 19:  #  shallow slope / right half
-      return ry >= 0.5 - 0.5 * rx
+      return ry <= 0.5 - 0.5 * rx
 
     elif col == 20:  #  shallow slope \ l
       return ry <= 0.5 * rx
@@ -134,17 +134,20 @@ class Sprite:
       return False
     hit = False
 
-    pxy = [self.x + vx, self.y + vy]
+    thex = self.x + self.w / 2
+    they = self.y + self.h / 2
+
+    pxy = [thex + vx, they + vy]
 
     l = math.sqrt(vx ** 2 + vy ** 2)
     pxy1 = [vx / l, vy / l]
 
-    while self.pointCollides(*(pxy + [vx, vy])) and (pxy[0] - self.x < 0) == (vx < 0) and (pxy[1] - self.y < 0) == (vy < 0):
-      pxy = [pxy[0] - pxy1[0] * 0.1, pxy[1] - pxy1[1] * 0.1]
+    while self.pointCollides(*(pxy + [vx, vy])) and (pxy[0] - thex < 0) == (vx < 0) and (pxy[1] - they < 0) == (vy < 0):
+      pxy = [pxy[0] - pxy1[0] * 0.03125, pxy[1] - pxy1[1] * 0.03125]
       hit = True
 
-    self.x = pxy[0]
-    self.y = pxy[1]
+    self.x = pxy[0] - self.w / 2
+    self.y = pxy[1] - self.h / 2
 
     if hit and vx < 0:
       self.vx = 0
@@ -156,7 +159,7 @@ class Sprite:
       self.vy = 0
       self.hitTop()
     elif hit and vy > 0:
-      self.vy = 0
+      self.vy = -0.981
       self.hitBottom()
 
   def hitLeft(self):   pass
