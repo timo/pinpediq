@@ -35,6 +35,10 @@ class Tilecollider:
     else: # still needs some magic
       my = -1  
     return [x, y, mx, my]
+    
+  def getIntersectionDepth(self, x, y, mx, my):
+    a = (self.m + x - y) / (vy - vx)
+    return a
 
 tiletypes = [\
   Tilecollider(0,  0,  -1),  # air, never block
@@ -138,12 +142,10 @@ class Sprite:
     glVertex2f(x, y)
     glEnd()
     glEnable(GL_TEXTURE_2D)
-
-  def checkCollision(self, vx, vy):
     
-    x = self.x + self.w / 2
-    y = self.y + self.h / 2
-    col = self.lev.tileset.collision[self.lev.level[int(x)][int(y)]]
+  def checkCornerCollision(self, x, y, vx, vy):
+    print "checkCornerCollision: ", int(x), int(y)
+    col = self.lev.tileset.collision[self.lev.level[int(y)][int(x)]]
     if tiletypes[col].collide(x, y, vx, vy):
       newpos = tiletypes[col].putOutside(x, y, vx, vy)
       self.x = newpos[0]
@@ -153,6 +155,26 @@ class Sprite:
       return True
     else:
       return False
+    
+
+  def checkCollision(self, vx, vy):
+    print self.x, self.y
+    intersectionDepth=0
+    x = self.x
+    y = self.y
+    collision=self.checkCornerCollision(x,y,vx,vy)
+    x = self.x + self.w
+    if self.checkCornerCollision(x,y,vx,vy):
+      collision=True
+    x = self.x
+    y = self.y + self.h
+    if self.checkCornerCollision(x,y,vx,vy):
+      collision=True
+    x = self.x
+    if self.checkCornerCollision(x,y,vx,vy):
+      collision=True
+    
+    return collision
 
   def hitLeft(self):   pass
   def hitRight(self):  pass
