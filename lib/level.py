@@ -1,6 +1,7 @@
 import res, scroll
 from OpenGL.GL import *
 import random
+import enemy
 # Collisions:
 # 0:  none
 # 1:  full
@@ -119,14 +120,33 @@ class Level:
   def load(self, levelname):
     self.levelname = levelname
 
+    # load the level file
     lf = open("data/levels/%s.pql" % levelname, "r")
-    
+
+    # tileset
     self.tilesetname = lf.readline().strip()
     (self.w, self.h) = [int(a) for a in lf.readline().strip().split(",")]
 
+    # level data (main layer)
     self.level = []
     for row in range(self.h):
       self.level.append([int(a) for a in lf.readline().strip().split()])
+
+    # extra objects (enemy/player spawners etc)
+    self.lvlenemies = []
+    extraobjects = lf.readlines()
+    for eo in extraobjects:
+      eos = eo.split()
+      ox = int(eos[0])
+      oy = int(eos[1])
+      if eos[2] == "playerspawn":
+        self.plrstartx, self.plrstarty = ox, oy
+
+      if eos[2] == "enemyspawn":
+        ene = enemy.Enemy(eos[3])
+        ene.x, ene.y = ox, oy
+        ene.lev = self
+        self.lvlenemies.append(ene)
 
     lf.close()
 

@@ -5,11 +5,13 @@ from sprite import *
 import random
 
 def frange(start, end, step):
+  """iterate over a range of float values with a float step value."""
   w = end - start
   for i in xrange(int(w / step)):
     yield start + i * step
 
 class RectDamage:
+  """Damage everything that touches a rectangular area"""
   def __init__(self, x, y, w, h, vx, vy, lifetime, damage = 10):
     self.x = x
     self.y = y
@@ -29,6 +31,7 @@ class RectDamage:
         self.lifetime = 0
 
   def check(self, other):
+    """checks wether the other object is hit by the damager"""
     if (self.x <= other.x <= self.x + self.w or\
         self.x <= other.x + other.w <= self.x + self.w) and\
        (self.y <= other.y <= self.y + self.h or\
@@ -41,7 +44,7 @@ class RectDamage:
     glDisable(GL_TEXTURE_2D)
 
     glTranslatef(self.x, self.y, 0)
-    glColor4f(1.0, 0.0, 1.0, 0.25)
+    glColor4f(1.0, 0.0, 1.0, 1.0)
 
     glBegin(GL_QUADS)
 
@@ -55,6 +58,7 @@ class RectDamage:
     glPopMatrix()
 
   def hit(self, other):
+    """applies damage to the other object"""
     if other.state == 'normal' and self.damage > 0:
       dvx = other.x + other.w / 2. - (self.x + self.w / 2.)
       dvy = other.y + other.h / 2. - (self.y + self.h / 2.)
@@ -72,6 +76,9 @@ class RectDamage:
         other.setstate('ouch', 0.75)
 
 class ArcDamage(RectDamage):
+  """An ArcDamage DamageArea hurts everything that touches a part of a circle.
+
+  Useful for swords."""
   def __init__(self, x, y, vx, vy, ra, sa, ea, lifetime, damage = 10):
     self.x = x
     self.y = y

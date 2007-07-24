@@ -61,10 +61,9 @@ def rungame():
   lvl.scroller.h = screensize[1] / 32 + 1
 
   plr = sprite.Sprite("player")
-  plr.x = 6
-  plr.y = 6
   plr.w = 1.0
   plr.h = 0.9
+  plr.x, plr.y = lvl.plrstartx, lvl.plrstarty
   plr.health = 100
 
   possiblepositions = [(1, 1), (1.5, 1), (2.5, 1), (3, 1), (3.5, 1), (4, 1), (4.5, 1),
@@ -80,17 +79,12 @@ def rungame():
   #      print lvl.level[y][x], (x, y)
   # TODO: find out why the mabla this doesn't work!
   
-  enemies = []
+  enemies = lvl.lvlenemies
   pain = []
   ppain = []
 
-  for i in range(5):
-    ne = enemy.enemy(random.choice(possibleenemys))
-    (ne.x, ne.y) = random.choice(possiblepositions)
-    #possiblepositions.remove((ne.x, ne.y))
-    (ne.w, ne.h) = (1, 1)
+  for ne in enemies:
     ne.vx = 0.5
-    enemies.append(ne)
     ppain.append(damageArea.RectDamage(ne.x, ne.y, ne.w, ne.h, ne.vx, ne.vy, -1, 10))
     ne.damager = ppain[-1] 
 

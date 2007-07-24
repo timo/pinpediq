@@ -5,11 +5,19 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 class Cursor:
+  """A graphical, pulsing Cursor
+
+  This class has no real use and has to be repositioned by the main loop of the
+  program as necessary"""
+
   def __init__(self, x=0, y=0):
     self.x = x
     self.y = y
 
   def draw(self):
+    """draw the Cursor to the screen.
+
+    Matrix operations are kept, disables TEXTURE_2D"""
     glDisable(GL_TEXTURE_2D)
     glPushMatrix()
     glTranslatef(self.x + 0.5, self.y + 0.5, 0)
@@ -26,7 +34,24 @@ class Cursor:
     glPopMatrix()
 
 class CommandInputArea(tinygui.TextInputArea):
+  """The Commandline for the Level Editor.
+
+  Commands offered by it are:
+  
+  save
+      saves the level to the current level name
+
+  info
+      displays width and heigth in a popup box
+
+  w = x; h = x
+      resizes the level, cutting parts off or adding tiles as necessary
+  """
+
   def __init__(self, parent):
+    """initialise the Commandline.
+
+    takes an instance of `LevelArea` as its parent"""
     tinygui.TextInputArea.__init__(self,
         "",
         pygame.Rect(0, 768 - 32, 1024, 32),
@@ -86,7 +111,17 @@ class CommandInputArea(tinygui.TextInputArea):
       self.lvlarea.updateLevel()
 
 class LevelNameArea(tinygui.TextInputArea):
+  """A TextInput to display and change the Name of the currently loaded Level.
+
+  if the name is changed and return is hit, a new level will be created.
+  """
+
   def __init__(self, parent):
+    """Initialises the LevelNameArea.
+
+    takes a LevelArea as its parent.
+    """
+
     self.lvlarea = parent
     tinygui.TextInputArea.__init__(self,
         self.lvlarea.lvl.levelname, # initial text
@@ -97,6 +132,7 @@ class LevelNameArea(tinygui.TextInputArea):
     self.rect = pygame.Rect(0, 0, self.lvlarea.lvl.w * 32, 32)
       
   def inputDone(self):
+    """Tries to load the Level. If it fails, a dummy level is created."""
     try:
       self.lvlarea.updateLevel(level.load(self.text, None))
       tinygui.popup("level %s loaded" % (self.text))
@@ -106,7 +142,13 @@ class LevelNameArea(tinygui.TextInputArea):
       tinygui.popup("new level %s" % (self.text))
 
 class TileSetNameArea(tinygui.TextInputArea):
+  """An Input Field to display or change the name of the currently loaded Tileset."""
+
   def __init__(self, parent):
+    """initialises the TileSetNameArea.
+
+    takes a TileSetArea as its parent
+    """
     self.tsa = parent
     tinygui.TextInputArea.__init__(self,
         self.tsa.lvlarea.lvl.tileset.name,
@@ -117,6 +159,7 @@ class TileSetNameArea(tinygui.TextInputArea):
     self.rect = pygame.Rect(self.tsa.lvlarea.rect.w + 32, self.tsa.rect.y - 32, self.tsa.rect.w, 32)
 
   def inputDone(self):
+    """Tries to load the tileset. If it fails, it displays an error"""
     try:
       self.tsa.lvlarea.lvl.tileset = level.Tileset(self.text)
       tinygui.popup("tileset %s loaded" % (self.text))
@@ -124,6 +167,10 @@ class TileSetNameArea(tinygui.TextInputArea):
       tinygui.popup("tileset %s does not exist" % (self.text))
 
 class TileSetArea(tinygui.Area):
+  """This Area displays the TileSet of the current level.
+
+  The user can select a tile from the Tileset which he wants to use for drawing
+  """
   def __init__(self, parent):
     self.lvlarea = parent
     self.setPosition()
@@ -133,6 +180,8 @@ class TileSetArea(tinygui.Area):
     self.cursor = Cursor()
 
   def handleEvent(self, ev):
+    """Handles mousebutton events to select a tileset or key events for scrolling."""
+
     if ev.type == MOUSEBUTTONDOWN and ev.button == 1:
       mpx = (ev.pos[0] - self.rect.x) / 32
       mpy = (ev.pos[1] - self.rect.y) / 32
@@ -177,6 +226,12 @@ class TileSetArea(tinygui.Area):
       ch.draw()
 
 class LevelArea(tinygui.Area):
+  """The Level area is responsible for almost all stuff that happens.
+
+  It creates a `LevelNameArea`, a `TileSetArea` and a `CommandInputArea` as
+  its children and houses the Level class.
+  """
+
   def __init__(self, levelname):
     self.scroller = scroll.ScrollView(15, 30)
     self.lvl = level.load(levelname, self.scroller)
@@ -190,6 +245,13 @@ class LevelArea(tinygui.Area):
     self.mbdown = False
 
   def updateLevel(self, newlevel = None):
+    """Updates the level, replacing it with a new one if necessary.
+
+    This function also adjusts the scroller and the positions of Areas that
+    it holds, such as the `TileSetArea` which will move left or right depending
+    on the size of the level.
+    """
+
     if newlevel:
       self.lvl = newlevel
     self.lvl.setScroller(self.scroller)
@@ -248,20 +310,21 @@ class LevelArea(tinygui.Area):
     for ch in self.children:
       ch.draw()
 
-main.init()
-tinygui.areas.append(LevelArea("krasi"))
+if __name__ == "__main__":
+  main.init()
+  tinygui.areas.append(LevelArea("krasi"))
 
-running = True
-timing.timer.startTiming()
+  running = True
+  timing.timer.startTiming()
 
-while running:
-  for ev in pygame.event.get():
-    tinygui.handleEvent(ev)
+  while running:
+    for ev in pygame.event.get():
+      tinygui.handleEvent(ev)
 
-    if ev.type == QUIT:
-      running = False
+      if ev.type == QUIT:
+        running = False
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-  glLoadIdentity()
-  tinygui.draw()
-  pygame.display.flip()
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glLoadIdentity()
+    tinygui.draw()
+    pygame.display.flip()

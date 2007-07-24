@@ -9,10 +9,12 @@ def sign(x):
   else:
     return 1
 
-class enemy(Sprite):
+class Enemy(Sprite):
   def __init__(self, enemyname):
     Sprite.__init__(self, enemyname)
-    self.health = 100
+    ef = open("data/enemies/%s.pqe" % enemyname, "r")
+    self.health    = float(ef.readline())
+    self.w, self.h = map(float, ef.readline().split())
     self.state = 'normal'
     self.nextstate = -1
     self.ice = False

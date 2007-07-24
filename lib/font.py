@@ -14,7 +14,7 @@ class Text:
 
   def renderText(self, thetext):
     text = thefont.render(thetext, True, (255, 255, 255)).convert_alpha()
-    npo2 = lambda x: 2 ** ceil(log(x, 2))
+    npo2 = lambda x: int(2 ** ceil(log(x, 2)))
     (w, h) = (npo2(text.get_width()), npo2(text.get_height()))
 
     bigSurface = pygame.Surface((w, h)).convert_alpha()

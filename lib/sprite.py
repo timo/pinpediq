@@ -2,6 +2,7 @@ import res
 from OpenGL.GL import *
 import level
 from timing import timer
+import util
 
 class Sprite:
   def __init__(self, imagename):
@@ -157,20 +158,6 @@ class Sprite:
       glScalef(-1, 1, 0)
     glScalef(self.w, self.h, 1)
 
-    glBegin(GL_QUADS)
-    
-    glTexCoord2f(0, 1)
-    glVertex2i(0, 1)
-
-    glTexCoord2f(0, 0)
-    glVertex2i(0, 0)
-
-    glTexCoord2f(1, 0)
-    glVertex2i(1, 0)
-
-    glTexCoord2f(1, 1)
-    glVertex2i(1, 1)
-
-    glEnd()
+    util.quad()
     
     glPopMatrix()
