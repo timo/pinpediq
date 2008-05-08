@@ -11,8 +11,9 @@ def sign(x):
 
 class Enemy(Sprite):
   def __init__(self, enemyname):
-    Sprite.__init__(self, enemyname)
     ef = open("data/enemies/%s.pqe" % enemyname, "r")
+    self.imagename = ef.readline().strip()
+    Sprite.__init__(self, self.imagename)
     self.health    = float(ef.readline())
     self.w, self.h = map(float, ef.readline().split())
     self.state = 'normal'
